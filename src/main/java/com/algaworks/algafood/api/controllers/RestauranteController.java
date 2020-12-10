@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +33,23 @@ public class RestauranteController {
 	//------CONTROLLER_LISTAR_RESTAURANTES-------//
 	@GetMapping
 	public List<Restaurante> listar(){
-		return restauranteRepository.listar();
+		return restauranteRepository.findAll();
 	}
 	
 	//------CONTROLLER_BUSCAR_RESTAURANTES------//
 	@GetMapping("/{id}")
 	public ResponseEntity<Restaurante> buscar(@PathVariable Long id) {
-		Restaurante restaurante = restauranteRepository.buscar(id);
-		if(restaurante != null) {
-			return ResponseEntity.ok(restaurante);
+		Optional<Restaurante> restauranteOptional = restauranteRepository.findById(id);
+		if(restauranteOptional.isPresent()) {
+			return ResponseEntity.ok(restauranteOptional.get());
 		}
 		return ResponseEntity.notFound().build();
+	}
+	
+	//------CONTROLLER_BUSCAR_RESTAURANTES_POR_NOME------//
+	@GetMapping("/porNome")
+	public List<Restaurante> buscarPorNome(String nome){
+		return restauranteRepository.findRestauranteByNomeContaining(nome);
 	}
 	
 	//------CONTROLLER_ADICIONAR_RESTAURANTES------//
@@ -62,11 +69,11 @@ public class RestauranteController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante) {
 		try {
-			Restaurante restAtual = restauranteRepository.buscar(id);
+			Optional<Restaurante> restAtualOptional = restauranteRepository.findById(id);
 			
-			if(restAtual != null) {
-				BeanUtils.copyProperties(restaurante, restAtual, "id");
-				cadastroRestauranteService.adicionar(restAtual);
+			if(restAtualOptional.isPresent()) {
+				BeanUtils.copyProperties(restaurante, restAtualOptional.get(), "id");
+				Restaurante restAtual = cadastroRestauranteService.adicionar(restAtualOptional.get());
 				return ResponseEntity.ok(restAtual);
 			}
 			
@@ -78,4 +85,5 @@ public class RestauranteController {
 					.body(e.getMessage());
 		}
 	}
+
 }
