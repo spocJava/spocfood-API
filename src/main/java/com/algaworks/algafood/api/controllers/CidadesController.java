@@ -38,6 +38,12 @@ public class CidadesController {
 		return cidadeRepository.findAll();
 	}
 	
+	//------CONTROLLER_LISTAR_CIDADES_POR_NOME-------//
+	@GetMapping("/porNome")
+	public List<Cidade> buscarPorNome(String nome) {
+		return cidadeRepository.findByNomeContaining(nome);
+	}
+	
 	//------CONTROLLER_BUSCAR_CIDADES------//
 	@GetMapping("/{id}")
 	public ResponseEntity<Cidade> buscar(@PathVariable Long id) {
