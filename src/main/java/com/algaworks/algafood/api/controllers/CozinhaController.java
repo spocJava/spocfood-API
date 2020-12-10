@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class CozinhaController {
 	 */
 	@GetMapping
 	public List<Cozinha> listar(){
-		return cozinhaRepository.listar();
+		return cozinhaRepository.findAll();
 	}
 	
 	/**
@@ -55,14 +56,19 @@ public class CozinhaController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Cozinha> buscar(@PathVariable Long id) {
-		Cozinha cozinha = cozinhaRepository.buscar(id);
+		Optional<Cozinha> cozinhaOptional = cozinhaRepository.findById(id);
 		
 		// se o recurso exixtir retorne o codigo 200 OK e a representação do recurso cozinha.
-		if(cozinha != null) {
-			return ResponseEntity.ok(cozinha);
+		if(cozinhaOptional.isPresent()) {
+			return ResponseEntity.ok(cozinhaOptional.get());
 		}
 		// se não retorne o codigo 404 NOT-FOUND sem representação do recurso...pois ele n exixte kkkk.
 		return ResponseEntity.notFound().build();
+	}
+	
+	@GetMapping("/porNome")
+	public List<Cozinha> bucarPorNome(String nome){
+		return cozinhaRepository.findByNomeContaining(nome);
 	}
 	
 	/**
@@ -86,13 +92,13 @@ public class CozinhaController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Cozinha> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
 		// busca a cozina a ser alteranda e salva em cozinhaAtual
-	    Cozinha cozinhaAtual = cadastroCozinha.buscar(id);
+	    Optional<Cozinha> cozinhaAtualOptional = cadastroCozinha.buscar(id);
 	    
-		if(cozinhaAtual != null) {
+		if(cozinhaAtualOptional.isPresent()) {
 			// atribui os elementos de cozinha(request) para cozinhaAtual(pesistida)
-			BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");// apartir do 3 parametro = passa se oque que excluir.
+			BeanUtils.copyProperties(cozinha, cozinhaAtualOptional.get(), "id");// apartir do 3 parametro = passa se oque que excluir.
 			// salva a cozinhaAtual que ja esta atualizada. 
-			cadastroCozinha.salvar(cozinhaAtual);
+			Cozinha cozinhaAtual = cadastroCozinha.salvar(cozinhaAtualOptional.get());
 			return ResponseEntity.ok(cozinhaAtual);
 		}
 		
@@ -116,14 +122,5 @@ public class CozinhaController {
 		}catch (EntidadeEmUsoExeption e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
-}
-
-
-			
-
-	
-	
-	
-	
-	
+	}
 }

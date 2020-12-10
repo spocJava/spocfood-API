@@ -5,6 +5,8 @@
  */
 package com.algaworks.algafood.domain.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -23,13 +25,13 @@ public class CadrastroCozinhaService {
 	
 	//---------ADICIONAR-----------//
 	public Cozinha salvar(Cozinha cozinha) {
-		return cozinhaRepository.salvar(cozinha);
+		return cozinhaRepository.save(cozinha);
 	}
 	
 	//---------EXCLUIR-----------//
 	public void excluir(Long id) {
 		try {
-			cozinhaRepository.remover(id);
+			cozinhaRepository.deleteById(id);
 			
 		}catch(EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaExecption(
@@ -42,7 +44,7 @@ public class CadrastroCozinhaService {
 	}
 	
 	//---------BUSCAR-----------//
-	public Cozinha buscar(Long id) {
-		return cozinhaRepository.buscar(id);
+	public Optional<Cozinha> buscar(Long id) {
+		return cozinhaRepository.findById(id);
 	}
 }
