@@ -7,5 +7,5 @@ import com.algaworks.algafood.domain.models.Cidade;
 
 @Repository
 public interface CidadeRepository extends JpaRepository<Cidade, Long>{
-
+    // Spring Data JPA -> usando os metodos da interface JpaRepository.
 }
