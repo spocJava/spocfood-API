@@ -37,14 +37,14 @@ public class CadastroCidadeService {
     //------SERVICE_SALVAR_CIDADES------//
 	public Cidade salvar(Cidade cidade) {
 		Long estadoId = cidade.getEstado().getId();
-		Estado estado = estadoRepository.buscar(estadoId);
+		Optional<Estado> estadoOptional = estadoRepository.findById(estadoId);
 		
-		if(estado == null) {
+		if(estadoOptional.isEmpty()) {
 			throw new EntidadeNaoEncontradaExecption(
 					String.format("Não existe um estado de código %d.", estadoId));
 		}
 		
-		cidade.setEstado(estado);
+		cidade.setEstado(estadoOptional.get());
 		return cidadeRepository.save(cidade);
 	}
 	
