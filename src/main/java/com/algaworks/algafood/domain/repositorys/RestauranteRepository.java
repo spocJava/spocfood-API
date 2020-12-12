@@ -11,4 +11,5 @@ import com.algaworks.algafood.domain.models.Restaurante;
 public interface RestauranteRepository extends JpaRepository<Restaurante, Long> {
 
 	public List<Restaurante> findRestauranteByNomeContaining(String nome);
+	public List<Restaurante> buscarPorTaxa(String nome, Double tx_inicail, Double tx_final);
 }

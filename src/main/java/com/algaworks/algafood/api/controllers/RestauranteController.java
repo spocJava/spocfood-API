@@ -52,6 +52,12 @@ public class RestauranteController {
 		return restauranteRepository.findRestauranteByNomeContaining(nome);
 	}
 	
+	//------CONTROLLER_BUSCAR_RESTAURANTES_POR_TAXA------//
+	@GetMapping("/listar")
+	public List<Restaurante> ListrPorTaxa(String nome, Double tx_inicial, Double tx_final){
+		return restauranteRepository.buscarPorTaxa(nome, tx_inicial, tx_final);
+	}
+	
 	//------CONTROLLER_ADICIONAR_RESTAURANTES------//
 	@PostMapping
 	public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {

@@ -25,7 +25,7 @@ public class Restaurante {
 	private String nome;
 	
 	@Column(name="taxa_frete", nullable = false)
-	private Double taxafrete;
+	private Double taxaFrete;
 	
 	/**
 	 * Varios restaurantes tem uma cozinha. (N*1)
