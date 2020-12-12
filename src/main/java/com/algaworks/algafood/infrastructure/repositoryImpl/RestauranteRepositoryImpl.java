@@ -7,6 +7,7 @@
  */
 package com.algaworks.algafood.infrastructure.repositoryImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -18,6 +19,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.algaworks.algafood.domain.models.Restaurante;
 
@@ -29,6 +31,7 @@ public class RestauranteRepositoryImpl{
 
 	public List<Restaurante> buscarPorTaxa(String nome, Double tx_inicial, Double tx_final){
 		
+		var predicates = new ArrayList<Predicate>();
 		// CriteriaBuilder fornece método para criar os filtros da pesquiza.
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		// CriteriaQuery fornece as cláusulas da pesquiza.
@@ -37,16 +40,24 @@ public class RestauranteRepositoryImpl{
 		//Root represento a raiz da pesquiza que nesse caso é Restaurante.
 		Root<Restaurante> root = criteria.from(Restaurante.class);
 		
-		//--> PREDICATES => são os filtros da pesquiza, que serão usado na clausula where.
-		//--------Restaurantes que contenham %-?(nome)-% em seu nomes-------------
-		Predicate nomePredicate = builder.like(root.get("nome"), "%" + nome + "%");
-		//--------Restaurantes que tenha texaFrete maior ou iqual a (tx_inicial)---------
-		Predicate tx_InicialPredicate = builder.greaterThanOrEqualTo(root.get("taxaFrete"), tx_inicial);
-		//--------Restaurantes que tenha texaFrete menor ou iqual a (tx_final)---------
-		Predicate tx_finalPredicate = builder.lessThanOrEqualTo(root.get("taxaFrete"), tx_final);
+		if(StringUtils.hasText(nome)) {
+			//--> PREDICATES => são os filtros da pesquiza, que serão usado na clausula where.
+			//--------Restaurantes que contenham %-?(nome)-% em seu nomes-------------
+			predicates.add(builder.like(root.get("nome"), "%" + nome + "%"));
+		}
+		
+		if(tx_inicial != null) {
+			//--------Restaurantes que tenha texaFrete maior ou iqual a (tx_inicial)---------
+			predicates.add(builder.greaterThanOrEqualTo(root.get("taxaFrete"), tx_inicial));
+		}
+		
+		if(tx_final != null) {
+			//--------Restaurantes que tenha texaFrete menor ou iqual a (tx_final)---------
+			predicates.add(builder.lessThanOrEqualTo(root.get("taxaFrete"), tx_final));
+		}
 		
 		// Cláusula where do CriteriaQuery = recebe uma array de predicates(filtros) da pesquiza.
-		criteria.where(nomePredicate, tx_InicialPredicate, tx_finalPredicate);
+		criteria.where(predicates.toArray(new Predicate[0]));
 		
 		TypedQuery<Restaurante> query =  entityManager.createQuery(criteria);
 		return query.getResultList();
