@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.models;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,19 +29,28 @@ import lombok.EqualsAndHashCode;
 public class Restaurante {
 	
 	@Id
-	@EqualsAndHashCode.Include
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include // somente o id será usado para criar o equals e o hashcode.
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // gera o id de forma automatica
 	private Long id;
 	
-	@Column(nullable = false)
+	@Column(nullable = false) // Coluna é not null (obrigatória)
 	private String nome;
 	
 	@Column(name="taxa_frete", nullable = false)
 	private Double taxaFrete;
 	
-	// Diz que é uma classe incorparada, é uma parte da entidade.
 	@JsonIgnore
-	@Embedded
+	@CreationTimestamp // Cria uma data quando é criado um novo recurso.
+	@Column(nullable = false, columnDefinition = "datetime") 
+	private LocalDate dataCriacao;
+	
+	@JsonIgnore
+	@UpdateTimestamp  // Cria uma data sempre que o recurso for atualizado.
+	@Column(nullable = false, columnDefinition = "datetime")   
+	private LocalDate dataAtualizacao;
+	
+	@JsonIgnore
+	@Embedded         // Diz que é uma classe incorparada, é uma parte da entidade.
 	private Endereco endereco;
 	
 	/**
@@ -45,7 +59,7 @@ public class Restaurante {
 	 * entre duas tabelas (restaurante/cozinha), traduzindo para o modelo Orientado a Objetos.
 	 * @JoinColumn = renomeia a coluna e pode setar o notnull com o parametro nullable=false
 	 */
-	@ManyToOne
+	@ManyToOne // muitos pra um
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 	
@@ -60,7 +74,15 @@ public class Restaurante {
 	 *  	@JoinColumn(name ="Nome_da_coluna", referencedColumnName = "ID da outra tabela que faz parte da relação"))
 	 */
 	@JsonIgnore
-    @ManyToMany	
+    @ManyToMany	// muitos pra muitos 
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 
+	/**
+	 * --> Um restaurante tem vários produtos (@OneToMany).
+	 * - Restaurante tem uma relação bi-direcional com Produto = <muitos produtos tem um restaurante>
+	 * -----------------relação----------------------------------<um restaurante tem nuitos produtos>
+	 */
+	@JsonIgnore
+	@OneToMany(mappedBy = "restaurante")
+	private List<Produto> produtos = new ArrayList<>();
 }
