@@ -59,6 +59,7 @@ public class Restaurante {
 	 * entre duas tabelas (restaurante/cozinha), traduzindo para o modelo Orientado a Objetos.
 	 * @JoinColumn = renomeia a coluna e pode setar o notnull com o parametro nullable=false
 	 */
+	@JsonIgnore
 	@ManyToOne // muitos pra um
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
