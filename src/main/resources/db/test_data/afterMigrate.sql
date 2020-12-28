@@ -1,3 +1,30 @@
+set foreign_key_checks = 0;
+
+delete from cidade;
+delete from cozinha;
+delete from estado;
+delete from forma_pagamento;
+delete from grupo;
+delete from grupo_permicoes;
+delete from permicao;
+delete from produto;
+delete from restaurante;
+delete from restaurante_formas_pagamento;
+delete from usuario;
+delete from usuario_grupos;
+
+set foreign_key_checks = 1;
+
+alter table cidade auto_increment = 1;
+alter table cozinha auto_increment = 1;
+alter table estado auto_increment = 1;
+alter table forma_pagamento auto_increment = 1;
+alter table grupo auto_increment = 1;
+alter table permicao auto_increment = 1;
+alter table produto auto_increment = 1;
+alter table restaurante auto_increment = 1;
+alter table usuario auto_increment = 1;
+
 insert into cozinha (nome) values ('Mineira');
 insert into cozinha (nome) values ('Bahiana');
 insert into cozinha (nome) values ('Cearense');
@@ -50,5 +77,3 @@ insert into produto (ativo, descricao, nome, preco, restaurante_id) values (1, '
 insert into produto (ativo, descricao, nome, preco, restaurante_id) values (1, 'Deliciosa picanha suína ao molho especial', 'Porco com alho', 89.90, 3);
 insert into produto (ativo, descricao, nome, preco, restaurante_id) values (1, 'Deliciosa pizza alemã acuwester', 'Pizza wester', 36.90, 4);
 insert into produto (ativo, descricao, nome, preco, restaurante_id) values (1, 'Saboroso medalhão de alcatra', 'Medalhão Bovino', 98.90, 5);
-
-
