@@ -1,4 +1,4 @@
-package com.algaworks.algafood.domain.models;
+package com.algaworks.algafood.domain.entitys;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

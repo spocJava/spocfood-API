@@ -1,12 +1,8 @@
 package com.algaworks.algafood.api.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.domain.exeptions.EntidadeNaoEncontradaExecption;
-import com.algaworks.algafood.domain.models.Restaurante;
+import com.algaworks.algafood.domain.entitys.Restaurante;
+import com.algaworks.algafood.domain.exeptions.NegocioException;
+import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.repositorys.RestauranteRepository;
 import com.algaworks.algafood.domain.services.CadastroRestauranteService;
 
@@ -28,7 +25,8 @@ public class RestauranteController {
 	private RestauranteRepository restauranteRepository;
 	
 	@Autowired
-	private CadastroRestauranteService cadastroRestauranteService;
+	private CadastroRestauranteService restauranteService;
+	
 	
 	//------CONTROLLER_LISTAR_RESTAURANTES-------//
 	@GetMapping
@@ -36,14 +34,11 @@ public class RestauranteController {
 		return restauranteRepository.findAll();
 	}
 	
+	
 	//------CONTROLLER_BUSCAR_RESTAURANTES------//
 	@GetMapping("/{id}")
-	public ResponseEntity<Restaurante> buscar(@PathVariable Long id) {
-		Optional<Restaurante> restauranteOptional = restauranteRepository.findById(id);
-		if(restauranteOptional.isPresent()) {
-			return ResponseEntity.ok(restauranteOptional.get());
-		}
-		return ResponseEntity.notFound().build();
+	public Restaurante buscar(@PathVariable Long id) {
+		return restauranteService.serviceBuscar(id);
 	}
 	
 	//------CONTROLLER_BUSCAR_RESTAURANTES_POR_NOME------//
@@ -58,38 +53,27 @@ public class RestauranteController {
 		return restauranteRepository.buscarPorTaxa(nome, tx_inicial, tx_final);
 	}
 	
+	
 	//------CONTROLLER_ADICIONAR_RESTAURANTES------//
 	@PostMapping
-	public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
+	public Restaurante adicionar(@RequestBody Restaurante restaurante) {
 		try {
-			restaurante = cadastroRestauranteService.adicionar(restaurante);
-			return ResponseEntity.ok(restaurante);
+			return restauranteService.serviceAdicionar(restaurante);
 			
-		}catch(EntidadeNaoEncontradaExecption e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(e.getMessage());
+		}catch(CozinhaNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
 		}
 	}
 	
+	
 	//------CONTROLLER_ATUALIZAR_RSTAURANTES------//
 	@PutMapping("/{id}")
-	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante) {
+	public Restaurante atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante) {
 		try {
-			Optional<Restaurante> restAtualOptional = restauranteRepository.findById(id);
+			return restauranteService.serviceAtualizar(id, restaurante);
 			
-			if(restAtualOptional.isPresent()) {
-				BeanUtils.copyProperties(restaurante, restAtualOptional.get(), "id", "formasPagamento", "endereco",
-						"dataCriacao", "produtos");
-				Restaurante restAtual = cadastroRestauranteService.adicionar(restAtualOptional.get());
-				return ResponseEntity.ok(restAtual);
-			}
-			
-			return ResponseEntity.notFound().build();
-			
-			
-		}catch(EntidadeNaoEncontradaExecption e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(e.getMessage());
+		}catch(CozinhaNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
 		}
 	}
 

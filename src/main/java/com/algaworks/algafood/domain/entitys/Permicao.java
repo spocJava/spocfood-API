@@ -1,4 +1,4 @@
-package com.algaworks.algafood.domain.models;
+package com.algaworks.algafood.domain.entitys;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

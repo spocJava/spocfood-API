@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.algaworks.algafood.domain.models.Cozinha;
+import com.algaworks.algafood.domain.entitys.Cozinha;
 
 @Repository
 public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {

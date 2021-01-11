@@ -1,15 +1,13 @@
 package com.algaworks.algafood.domain.services;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.algaworks.algafood.domain.exeptions.EntidadeEmUsoExeption;
-import com.algaworks.algafood.domain.exeptions.EntidadeNaoEncontradaExecption;
-import com.algaworks.algafood.domain.models.Estado;
+import com.algaworks.algafood.domain.entitys.Estado;
+import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.EstadoEmUsoException;
+import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.repositorys.EstadoRepository;
 
 @Service
@@ -25,8 +23,8 @@ public class CadastroEstadoService {
 	 }
 	 
 	 //-----SERVICE_BUSCAR_ESTADOS-----//
-	 public Optional<Estado> bucar(Long id) {
-		 return estadoRepository.findById(id);
+	 public Estado buscar(Long id) {
+		 return estadoRepository.findById(id).orElseThrow(() -> new EstadoNaoEncontradoException(id));
 	 }
 	 
 
@@ -36,12 +34,11 @@ public class CadastroEstadoService {
 			 estadoRepository.deleteById(id);
 			 
 		 }catch(EmptyResultDataAccessException e) {
-			 throw new EntidadeNaoEncontradaExecption(
-					 String.format("Não existe um estado com o código %d na base de dados.", id));
+			 throw new EstadoNaoEncontradoException(id);
 			 
 		 }catch(DataIntegrityViolationException e) {
-			 throw new EntidadeEmUsoExeption(
-					 String.format("O estado de código %d não pode ser excluido, pois está em uso.", id));
+			 throw new EstadoEmUsoException(id);
 		 }
+			 
 	 }
 }

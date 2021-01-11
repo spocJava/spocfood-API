@@ -1,4 +1,4 @@
-package com.algaworks.algafood.domain.models;
+package com.algaworks.algafood.domain.entitys;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class Restaurante {
 	 * entre duas tabelas (restaurante/cozinha), traduzindo para o modelo Orientado a Objetos.
 	 * @JoinColumn = renomeia a coluna e pode setar o notnull com o parametro nullable=false
 	 */
-	@JsonIgnore
+	//@JsonIgnore
 	@ManyToOne // muitos pra um
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;

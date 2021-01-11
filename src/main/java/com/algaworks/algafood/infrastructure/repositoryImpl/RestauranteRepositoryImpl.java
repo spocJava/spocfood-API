@@ -21,7 +21,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.algaworks.algafood.domain.models.Restaurante;
+import com.algaworks.algafood.domain.entitys.Restaurante;
 
 @Component
 public class RestauranteRepositoryImpl{

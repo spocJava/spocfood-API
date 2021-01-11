@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.domain.models.Grupo;
+import com.algaworks.algafood.domain.entitys.Grupo;
 import com.algaworks.algafood.domain.services.GrupoService;
 
 @RestController

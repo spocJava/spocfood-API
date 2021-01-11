@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.domain.exeptions.EntidadeEmUsoExeption;
-import com.algaworks.algafood.domain.exeptions.EntidadeNaoEncontradaExecption;
-import com.algaworks.algafood.domain.models.FormaPagamento;
+import com.algaworks.algafood.domain.entitys.FormaPagamento;
+import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.EntidadeEmUsoExeption;
+import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.EntidadeNaoEncontradaExecption;
 import com.algaworks.algafood.domain.repositorys.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.services.FormaPagamentoService;
 

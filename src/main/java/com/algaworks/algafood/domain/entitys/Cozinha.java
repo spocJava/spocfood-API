@@ -1,4 +1,4 @@
-package com.algaworks.algafood.domain.models;
+package com.algaworks.algafood.domain.entitys;
 
 import java.util.ArrayList;
 import java.util.List;

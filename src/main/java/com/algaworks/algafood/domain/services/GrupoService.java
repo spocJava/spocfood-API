@@ -8,9 +8,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.algaworks.algafood.domain.exeptions.EntidadeEmUsoExeption;
-import com.algaworks.algafood.domain.exeptions.EntidadeNaoEncontradaExecption;
-import com.algaworks.algafood.domain.models.Grupo;
+import com.algaworks.algafood.domain.entitys.Grupo;
+import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.EntidadeEmUsoExeption;
+import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.EntidadeNaoEncontradaExecption;
 import com.algaworks.algafood.domain.repositorys.GrupoRepository;
 
 @Service

@@ -5,16 +5,15 @@
  */
 package com.algaworks.algafood.domain.services;
 
-import java.util.Optional;
-
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.algaworks.algafood.domain.exeptions.EntidadeEmUsoExeption;
-import com.algaworks.algafood.domain.exeptions.EntidadeNaoEncontradaExecption;
-import com.algaworks.algafood.domain.models.Cozinha;
+import com.algaworks.algafood.domain.entitys.Cozinha;
+import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.CozinhaEmUsoException;
+import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.repositorys.CozinhaRepository;
 
 @Service
@@ -24,27 +23,37 @@ public class CadrastroCozinhaService {
 	private CozinhaRepository cozinhaRepository; 
 	
 	//---------ADICIONAR-----------//
-	public Cozinha salvar(Cozinha cozinha) {
+	public Cozinha serviceSalvar(Cozinha cozinha) {
 		return cozinhaRepository.save(cozinha);
 	}
 	
+	
+	//---------BUSCAR-----------//
+	public Cozinha serviceBuscar(Long id) {
+		return cozinhaRepository.findById(id).orElseThrow(() -> new CozinhaNaoEncontradaException(id));
+	}
+	
+	
+	//---------ATUALIZAR-----------//
+	public Cozinha serviceAtualizar(Long id, Cozinha cozinha) {
+		Cozinha cozinhaAtual = serviceBuscar(id);
+		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+		return serviceSalvar(cozinhaAtual);
+	}
+	
+	
 	//---------EXCLUIR-----------//
-	public void excluir(Long id) {
+	public void serviceExcluir(Long id) {
 		try {
 			cozinhaRepository.deleteById(id);
 			
 		}catch(EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaExecption(
-					String.format("Não existe uma cozinha de código %d na base de dados. ", id));
+			throw new CozinhaNaoEncontradaException(id);
 			
 		}catch(DataIntegrityViolationException e){
-			throw new EntidadeEmUsoExeption(
-					String.format("Cozinha de código %d não pode ser removida, pois está em uso.", id));
+			throw new CozinhaEmUsoException(id);
 		}
 	}
 	
-	//---------BUSCAR-----------//
-	public Optional<Cozinha> buscar(Long id) {
-		return cozinhaRepository.findById(id);
-	}
+	
 }
