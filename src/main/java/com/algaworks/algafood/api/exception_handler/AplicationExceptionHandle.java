@@ -145,7 +145,7 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
 	
-	//----HandleException para customizar as exceptions do tipo MethodArgumentTypeMismatchException ---
+	//----HandleException para customizar as exceptions do tipo <MethodArgumentTypeMismatchException> ---
 	private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpHeaders headers
 			, HttpStatus status, WebRequest request ) {
 		
