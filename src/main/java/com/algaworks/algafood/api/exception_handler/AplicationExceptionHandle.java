@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.exception_handler;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,7 +79,10 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		String detail = String.format("Foi atribuida á propriedade ['%s'] um valor inválido ['%s'], atribua um valor do tipo <'%s'>", 
 				path, ex.getValue(), ex.getTargetType().getSimpleName());
 		
-		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail).build();
+		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail)
+				.userMessage(detail)
+				.timestamp(LocalDateTime.now())
+				.build();
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
@@ -91,7 +95,10 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		
 		HandleErrorType erroType = HandleErrorType.SINTASE_ERRO_REQUIZICAO;
 		String detail = String.format("A propriedade '%s' não foi reconhecida para essa requiziçao", path);
-		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail).build();
+		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail)
+				.userMessage(String.format("A requizição Http possui uma propriedade não reconhecida pela API: -> prop=(%s)", path))
+				.timestamp(LocalDateTime.now())
+				.build();
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
@@ -103,8 +110,11 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		String path = joinPath(ex.getPath());
 						
 		HandleErrorType erroType = HandleErrorType.SINTASE_ERRO_REQUIZICAO;
-		String detail = String.format("A propriedade ['%s'] não pode ser deserializada, pois está ignorada (JsonIgnore).", path);
-		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail).build();
+		String detail = String.format("A propriedade ['%s'] não pode ser deserializada, pois está ignorada com o (JsonIgnore).", path);
+		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail)
+				.userMessage(detail)
+				.timestamp(LocalDateTime.now())
+				.build();
 
 		return handleExceptionInternal(ex, problem, headers, status, request);
 
@@ -144,7 +154,10 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
                         + "que é de um tipo inválido. Corrija e informe um valor compatível com o tipo %s.", ex.getName(), ex.getValue(), 
                            ex.getRequiredType().getSimpleName());
 		
-		HandleErrorMensage problem =  createHandleErrorMensage(status, erroType, detail).build();
+		HandleErrorMensage problem =  createHandleErrorMensage(status, erroType, detail)
+				.userMessage(detail)
+				.timestamp(LocalDateTime.now())
+				.build();
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
@@ -159,7 +172,10 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		HandleErrorType erroType = HandleErrorType.RECURSO_NAO_ENCONTRADO;
 		String detail = String.format("O recurso ['%s'] não existe", ex.getRequestURL());
 		
-		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail).build();
+		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail)
+				.userMessage(String.format("Não existe um endpoint %s na API, verifique se està correta a requizição", ex.getRequestURL()))
+				.timestamp(LocalDateTime.now())
+				.build();
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
@@ -174,7 +190,10 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		HandleErrorType erroType = HandleErrorType.RECURSO_NAO_ENCONTRADO;
 		String detail = ex.getMessage();
 		
-		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail).build();
+		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail)
+				.userMessage(detail)
+				.timestamp(LocalDateTime.now())
+				.build();
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
@@ -189,7 +208,10 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		HandleErrorType erroType = HandleErrorType.ENTIDADE_EM_USO;
 		String detail = ex.getMessage();
 		
-		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail).build();
+		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail)
+				.userMessage(detail)
+				.timestamp(LocalDateTime.now())
+				.build();
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), HttpStatus.CONFLICT, request);
 	} 
@@ -204,7 +226,11 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		HandleErrorType erroType = HandleErrorType.ERRO_NEGOCIO;
 		String detail = ex.getMessage();
 		
-		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail).build();
+		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail)
+				.userMessage("Ocorreu um erro interno inesperado no sistema. Tente novamente e se o problema persistir, entre em contato"
+				  + "com o administrador do sistema")
+				.timestamp(LocalDateTime.now())
+				.build();
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}

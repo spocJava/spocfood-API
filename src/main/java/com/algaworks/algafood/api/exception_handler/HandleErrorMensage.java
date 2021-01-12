@@ -1,5 +1,7 @@
 package com.algaworks.algafood.api.exception_handler;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -21,5 +23,8 @@ public class HandleErrorMensage {
 	private String type;
 	private String title;
 	private String detail;
+	
+	private String userMessage;
+	private LocalDateTime timestamp;
 	
 }
