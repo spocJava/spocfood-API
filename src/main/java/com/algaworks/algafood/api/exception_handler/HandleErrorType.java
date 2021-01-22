@@ -23,7 +23,8 @@ public enum HandleErrorType {
 	ERRO_NEGOCIO("/erro-negocio", "Violação de uma regra de negócio"),
 	SINTASE_ERRO_REQUIZICAO("/erro-na-requizicao", "Formato de requizição inválida"),
 	PARAMETRO_INVALIDO("/parametro-invalido", "Parametro inválido"),
-	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro de sistema");
+	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro de sistema"),
+	DADOS_INVALIDOS("/dados-invalidos", "Dados inválidos");
 	
 	private String title;
 	private String type;

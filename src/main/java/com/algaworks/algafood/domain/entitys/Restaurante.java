@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -33,20 +34,21 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // gera o id de forma automatica
 	private Long id;
 	
-	@Column(nullable = false) // Coluna é not null (obrigatória)
+	@NotNull
+    @Column(nullable = false)
 	private String nome;
 	
-	@Column(name="taxa_frete", nullable = false)
+	@Column(name="taxa_frete")
 	private Double taxaFrete;
 	
 	@JsonIgnore
 	@CreationTimestamp // Cria uma data quando é criado um novo recurso.
-	@Column(nullable = false, columnDefinition = "datetime") 
+	@Column(columnDefinition = "datetime") 
 	private LocalDate dataCriacao;
 	
 	@JsonIgnore
 	@UpdateTimestamp  // Cria uma data sempre que o recurso for atualizado.
-	@Column(nullable = false, columnDefinition = "datetime")   
+	@Column(columnDefinition = "datetime")   
 	private LocalDate dataAtualizacao;
 	
 	@JsonIgnore
@@ -61,7 +63,7 @@ public class Restaurante {
 	 */
 	//@JsonIgnore
 	@ManyToOne // muitos pra um
-	@JoinColumn(name = "cozinha_id", nullable = false)
+	@JoinColumn(name = "cozinha_id")
 	private Cozinha cozinha;
 	
 	/**

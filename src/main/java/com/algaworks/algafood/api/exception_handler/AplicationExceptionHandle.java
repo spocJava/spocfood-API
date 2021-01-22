@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,8 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 @ControllerAdvice //--Classe para agrupar os ExceptionHandlers
 public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 	
-	//============================================================================================================================
+	
+	
 	/**
 	 * Esse ExceptionHandle pode capturar exceções com diferentes causas.
 	 * EXEM:  InvalidFormatException
@@ -68,6 +70,7 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
+	
 
 	//---Metodo para customizar o <InvalidFormatException>
 	private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers
@@ -87,6 +90,7 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
 	
+	
 	//---Metodo para customizar o <UnrecognizedPropertyException>
 	private ResponseEntity<?> handleUnrecognizedPropertyException(UnrecognizedPropertyException ex, HttpHeaders headers
 			,HttpStatus status, WebRequest request) {
@@ -102,6 +106,7 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
+	
 	
 	//---Metodo para customizar o <IgnoredPropertyException>
 	private ResponseEntity<Object> handleIgnoredPropertyException(IgnoredPropertyException ex,
@@ -120,6 +125,7 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 
 	}
 	
+	
 	//---metodo auxiliar para buscar a propriedade com erro...
 	private String joinPath(List<Reference> references) {
 		return references.stream()
@@ -127,7 +133,6 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 			.collect(Collectors.joining("."));
 	}
 	
-	//============================================================================================================================
 	
 	//----HandleException para customizar as exceptions do tipo <TypeMismatchException> ---
 	@Override
@@ -144,6 +149,7 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
+	
 	
 	//----HandleException para customizar as exceptions do tipo <MethodArgumentTypeMismatchException> ---
 	private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpHeaders headers
@@ -162,7 +168,6 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
 
-	//============================================================================================================================
 	
 	//----HandleException para customizar as exceptions do tipo NoHandlerFoundException ---
 	@Override
@@ -180,7 +185,17 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
 	
-	//============================================================================================================================
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request){
+		
+		HandleErrorType type = HandleErrorType.DADOS_INVALIDOS;
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		String detail = "O valor da propriedade não pode ser nulo";
+		HandleErrorMensage problem = createHandleErrorMensage(status, type, detail).build();
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+	}
+	
 	
 	//----HandleException para customizar as exceptions do tipo EntidadeNaoEncontradaException ---
 	@ExceptionHandler(EntidadeNaoEncontradaExecption.class)
@@ -198,7 +213,6 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	
-	//============================================================================================================================
 	
 	//----ExceptionHandler para customizar as exceptions do tipo EntidadeEmUsoException ---
 	@ExceptionHandler(EntidadeEmUsoExeption.class)
@@ -216,7 +230,6 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), HttpStatus.CONFLICT, request);
 	} 
 	
-	//============================================================================================================================
 	
 	//----ExceptionHandler para customizar as exceptions do tipo NegocioException ---
 	@ExceptionHandler(NegocioException.class)
@@ -235,7 +248,6 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 	
-	//============================================================================================================================
 	
 	//----Metedo central para customizar a representação das exceptionHandlers----
 	@Override
@@ -243,21 +255,18 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 			HttpStatus status, WebRequest request) {
 		
 		if(body == null) {
-			body = HandleErrorMensage.builder()
-				.status(status.value())
+			body = HandleErrorMensage.builder().status(status.value())
 				.title(status.getReasonPhrase())
 				.build();
 			
 		}else if(body instanceof String)
-		    body = HandleErrorMensage.builder()
-		        .status(status.value())
+		    body = HandleErrorMensage.builder().status(status.value())
 		        .title((String) body)
 				.build();
 		
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
 	
-	//============================================================================================================================
 	
 	//---Metodo para ajudar a instanciar o HandleErrorMensage com problemas diferentes ---- 
 	private HandleErrorMensage.HandleErrorMensageBuilder createHandleErrorMensage(HttpStatus status, 
@@ -269,7 +278,6 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 				.detail(detail);
 	}
 	
-	//============================================================================================================================
 	
 	//---ExceptionHandle geral ----
 	@ExceptionHandler(Exception.class)
@@ -286,11 +294,5 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail).build();
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
-	
-	
-	
-	
-	
-	
 	
 }
