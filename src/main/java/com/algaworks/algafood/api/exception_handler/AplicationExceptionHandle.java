@@ -6,11 +6,12 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -36,7 +37,30 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 @ControllerAdvice //--Classe para agrupar os ExceptionHandlers
 public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 	
-	
+	//---Esse metodo customiza a exception MethodArgumentNotValidException 
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		BindingResult bindingResult = ex.getBindingResult(); // pega todos os campos com erro
+		
+		HandleErrorType type = HandleErrorType.DADOS_INVALIDOS;
+		String detail = "Um ou mais campos estão inválido. faça o preenchimento correto e tente novamente";
+		List<HandleErrorMensage.Field> problemFields = bindingResult.getFieldErrors().stream()
+				.map(fieldError -> HandleErrorMensage.Field.builder() // 1ª - transforma uma list de fieldErro em uma list de objetos problemFields
+						.name(fieldError.getField()) //                  2ª - pega o nome do campo
+						.userMessage(fieldError.getDefaultMessage()) //  3ª - pega a mensagem do erro
+						.build()) //                                     4ª - cria o(s) objeto Field
+				.collect(Collectors.toList()); //                        5ª - coleta os objetos e forma uma list de Fields passada para problemFields
+		
+		HandleErrorMensage problem = createHandleErrorMensage(status, type, detail)
+				.userMessage(detail)
+				.timestamp(LocalDateTime.now())
+				.fields(problemFields)
+				.build();
+		
+		return handleExceptionInternal(ex, problem, headers, status, request);
+	}
 	
 	/**
 	 * Esse ExceptionHandle pode capturar exceções com diferentes causas.
@@ -186,17 +210,6 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 	}
 	
 	
-	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request){
-		
-		HandleErrorType type = HandleErrorType.DADOS_INVALIDOS;
-		HttpStatus status = HttpStatus.BAD_REQUEST;
-		String detail = "O valor da propriedade não pode ser nulo";
-		HandleErrorMensage problem = createHandleErrorMensage(status, type, detail).build();
-		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
-	}
-	
-	
 	//----HandleException para customizar as exceptions do tipo EntidadeNaoEncontradaException ---
 	@ExceptionHandler(EntidadeNaoEncontradaExecption.class)
 	public ResponseEntity<?> handleEntidadeNãoEncontradaExeption(EntidadeNaoEncontradaExecption ex, WebRequest request){
@@ -233,7 +246,7 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 	
 	//----ExceptionHandler para customizar as exceptions do tipo NegocioException ---
 	@ExceptionHandler(NegocioException.class)
-	public ResponseEntity<?> handleEntidadeEmUsoException(NegocioException ex, WebRequest request){
+	public ResponseEntity<?> handleNegocioException(NegocioException ex, WebRequest request){
 		
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		HandleErrorType erroType = HandleErrorType.ERRO_NEGOCIO;

@@ -70,7 +70,7 @@ public class RestauranteController {
 	
 	//------CONTROLLER_ATUALIZAR_RSTAURANTES------//
 	@PutMapping("/{id}")
-	public Restaurante atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante) {
+	public Restaurante atualizar(@PathVariable Long id, @RequestBody @Valid Restaurante restaurante) {
 		try {
 			return restauranteService.serviceAtualizar(id, restaurante);
 			

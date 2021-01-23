@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.exception_handler;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -21,10 +22,18 @@ public class HandleErrorMensage {
 
 	private Integer status;
 	private String type;
-	private String title;
+	private String title;  // Padrão Problem detail
 	private String detail;
 	
 	private String userMessage;
-	private LocalDateTime timestamp;
+	private LocalDateTime timestamp;  // extenções do padrão
+	private List<Field> fields;
+	
+	@Getter
+	@Builder
+	public static class Field {        // classe interna contendo o nome do campo que teve uma violaçao de validação
+		private String name;           // com uma mensagem sobre detalhes da violação.
+		private String userMessage;
+	}
 	
 }
