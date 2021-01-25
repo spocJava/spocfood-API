@@ -3,6 +3,8 @@ package com.algaworks.algafood.api.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,14 +57,14 @@ public class FormaPagamentosController {
 	//-----CONTROLLER_ADICIONAR_FORMAS_DE_PAGAMNETO------//
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public FormaPagamento adicionar(@RequestBody FormaPagamento formaPagamento){
+	public FormaPagamento adicionar(@RequestBody @Valid FormaPagamento formaPagamento){
 		return formaPagamentoRepository.save(formaPagamento);
 	}
 	
 	//-----CONTROLLER_ATUALIZAR_FORMAS_DE_PAGAMNETO------//
 	@PutMapping("/{id}")
 	public ResponseEntity<FormaPagamento> atualizar(@PathVariable Long id, 
-			@RequestBody FormaPagamento formaPagamento){
+			@RequestBody @Valid FormaPagamento formaPagamento){
 		Optional<FormaPagamento> formaPagamentoAtualOptional = formaPagamentoRepository.findById(id);
 		
 		if(formaPagamentoAtualOptional.isPresent()) {

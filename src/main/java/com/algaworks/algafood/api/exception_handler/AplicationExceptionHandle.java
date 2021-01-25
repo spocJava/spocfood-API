@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +40,9 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 @ControllerAdvice //--Classe para agrupar os ExceptionHandlers
 public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 	
+	@Autowired
+	MessageSource messageSource; // resolve mensagens
+	
 	//---Esse metodo customiza a exception MethodArgumentNotValidException 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -47,11 +53,14 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		HandleErrorType type = HandleErrorType.DADOS_INVALIDOS;
 		String detail = "Um ou mais campos estão inválido. faça o preenchimento correto e tente novamente";
 		List<HandleErrorMensage.Field> problemFields = bindingResult.getFieldErrors().stream()
-				.map(fieldError -> HandleErrorMensage.Field.builder() // 1ª - transforma uma list de fieldErro em uma list de objetos problemFields
+				.map(fieldError -> {
+					String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+			     return HandleErrorMensage.Field.builder() //            1ª - transforma uma list de fieldErro em uma list de objetos problemFields
 						.name(fieldError.getField()) //                  2ª - pega o nome do campo
-						.userMessage(fieldError.getDefaultMessage()) //  3ª - pega a mensagem do erro
-						.build()) //                                     4ª - cria o(s) objeto Field
-				.collect(Collectors.toList()); //                        5ª - coleta os objetos e forma uma list de Fields passada para problemFields
+						.userMessage(message) //                         3ª - pega a mensagem do erro
+						.build();//                                      4ª - cria o(s) objeto Field
+	             })//                                                    5ª - coleta os objetos e forma uma list de Fields passada para problemFields
+				.collect(Collectors.toList()); 
 		
 		HandleErrorMensage problem = createHandleErrorMensage(status, type, detail)
 				.userMessage(detail)

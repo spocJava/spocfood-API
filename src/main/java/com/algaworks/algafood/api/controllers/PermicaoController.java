@@ -3,6 +3,8 @@ package com.algaworks.algafood.api.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,13 +56,13 @@ public class PermicaoController {
 	//-----CONTROLLER_ADICIONAR_PERMIÇÕES------//
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Permicao adicionar(@RequestBody Permicao permicao) {
+	public Permicao adicionar(@RequestBody @Valid Permicao permicao) {
 		return permicaoRepository.save(permicao);
 	}
 	
 	//-----CONTROLLER_ATUALIZAR_PERMIÇÕES------//
 	@PutMapping("/{id}")
-	public ResponseEntity<Permicao> atualizar(@PathVariable Long id, @RequestBody Permicao permicao){
+	public ResponseEntity<Permicao> atualizar(@PathVariable Long id, @RequestBody @Valid Permicao permicao){
 		Optional<Permicao> permicaoAtualOptional = permicaoRepository.findById(id);
 		
 		if(permicaoAtualOptional.isPresent()) {
