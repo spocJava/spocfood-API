@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.entitys.Cozinha;
 import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.CozinhaEmUsoException;
@@ -23,6 +24,7 @@ public class CadrastroCozinhaService {
 	private CozinhaRepository cozinhaRepository; 
 	
 	//---------ADICIONAR-----------//
+	@Transactional
 	public Cozinha serviceSalvar(Cozinha cozinha) {
 		return cozinhaRepository.save(cozinha);
 	}
@@ -43,6 +45,7 @@ public class CadrastroCozinhaService {
 	
 	
 	//---------EXCLUIR-----------//
+	@Transactional
 	public void serviceExcluir(Long id) {
 		try {
 			cozinhaRepository.deleteById(id);

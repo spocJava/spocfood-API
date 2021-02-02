@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.entitys.Estado;
 import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.EstadoEmUsoException;
@@ -18,6 +19,7 @@ public class CadastroEstadoService {
 	 private EstadoRepository estadoRepository;
 
 	 //-----SERVICE_SALVAR_ESTADOS-----//
+	 @Transactional
 	 public Estado salvar(Estado estado) {
 		 return estadoRepository.save(estado);
 	 }
@@ -29,6 +31,7 @@ public class CadastroEstadoService {
 	 
 
 	//-----SERVICE_REMOVER_ESTADOS-----//
+	 @Transactional
 	 public void remover(Long id) {
 		 try {
 			 estadoRepository.deleteById(id);

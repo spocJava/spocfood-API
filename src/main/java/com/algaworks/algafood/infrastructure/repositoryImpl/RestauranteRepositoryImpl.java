@@ -1,7 +1,7 @@
 /**
  * Essa classe é uma implemantação custumizada, onde seus métodos serão passados
  * para o repositório base da nossa entidade {@link Restaurante}. Onde usaremos critiria API
- * para implementar pesquizas dinâmicas.
+ * para implementar pesquizas programáticas.
  * ------------------------------------------------vamos lá!!!!!!!!!!-------
  * @author spoc
  */

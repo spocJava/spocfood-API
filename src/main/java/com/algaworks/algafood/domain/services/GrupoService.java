@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.entitys.Grupo;
 import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.EntidadeEmUsoExeption;
@@ -25,6 +26,7 @@ public class GrupoService {
 	}
 	
 	//---- Adiciona um novo grupo ---->
+	@Transactional
 	public Grupo addGroup(Grupo grupo) {
 		return grupoRepository.save(grupo);
 	}
@@ -42,6 +44,7 @@ public class GrupoService {
 	
 	
 	//---- Remove um grupo pelo seu id ---->
+	@Transactional
 	public void deleteGrupById(Long id) {
 		try {
 			grupoRepository.deleteById(id);

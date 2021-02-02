@@ -3,6 +3,7 @@ package com.algaworks.algafood.domain.services;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.entitys.Cozinha;
 import com.algaworks.algafood.domain.entitys.Restaurante;
@@ -20,6 +21,7 @@ public class CadastroRestauranteService {
 	
 	
 	//---------SERVICE_ADICIONAR_RESTAURANTES----------//
+	@Transactional
 	public Restaurante serviceAdicionar(Restaurante restaurante) {
 		Long id = restaurante.getCozinha().getId();
 		Cozinha cozinha = cozinhaService.serviceBuscar(id);
