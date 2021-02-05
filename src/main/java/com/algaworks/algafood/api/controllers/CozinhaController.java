@@ -4,6 +4,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.domain_to_DTO.CozinhaModel;
+import com.algaworks.algafood.domain.entitys.Cozinha;
+import com.algaworks.algafood.domain.repositorys.CozinhaRepository;
+import com.algaworks.algafood.domain.services.CadrastroCozinhaService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,10 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.domain.entitys.Cozinha;
-import com.algaworks.algafood.domain.repositorys.CozinhaRepository;
-import com.algaworks.algafood.domain.services.CadrastroCozinhaService;
-
 @RestController
 @RequestMapping("/cozinhas")
 public class CozinhaController {
@@ -29,6 +30,9 @@ public class CozinhaController {
 	
 	@Autowired
 	private CadrastroCozinhaService cadastroCozinha;
+
+	@Autowired
+	CozinhaModel cozinhaToDTO;
 	
 
 	/**
@@ -36,8 +40,8 @@ public class CozinhaController {
 	 * @return lista de cozinhas
 	 */
 	@GetMapping
-	public List<Cozinha> listar(){
-		return cozinhaRepository.findAll();
+	public List<CozinhaModel> listar(){
+		return cozinhaToDTO.toListCozinhaDTO(cozinhaRepository.findAll());
 	}
 	
 	

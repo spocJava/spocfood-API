@@ -1,14 +1,15 @@
 package com.algaworks.algafood.domain.services;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.algaworks.algafood.api.input_model.RestauranteInputModel;
+import com.algaworks.algafood.api.input_model_to_domain.RestauranteInputModelToRestauranteDomainModel;
 import com.algaworks.algafood.domain.entitys.Cozinha;
 import com.algaworks.algafood.domain.entitys.Restaurante;
 import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.RestauranteNaoEncontradaException;
 import com.algaworks.algafood.domain.repositorys.RestauranteRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CadastroRestauranteService {
@@ -18,6 +19,9 @@ public class CadastroRestauranteService {
 	
 	@Autowired
 	private CadrastroCozinhaService cozinhaService;
+
+	@Autowired
+	RestauranteInputModelToRestauranteDomainModel restInputToModel;
 	
 	
 	//---------SERVICE_ADICIONAR_RESTAURANTES----------//
@@ -37,9 +41,9 @@ public class CadastroRestauranteService {
 	
 	
 	//---------SERVICE_ATUALIZAR_RESTAURANTES----------//
-	public Restaurante serviceAtualizar(Long id, Restaurante rest) {
-		Restaurante restaurante = serviceBuscar(id);
-		BeanUtils.copyProperties(rest, restaurante, "id", "formasPagamento", "endereco", "dataCriacao", "produtos");
-		return serviceAdicionar(restaurante);
+	public Restaurante serviceAtualizar(Long id, RestauranteInputModel restInput) {
+		Restaurante restauranteAtual = serviceBuscar(id);
+        restInputToModel.copyInputToModel(restInput, restauranteAtual);
+		return serviceAdicionar(restauranteAtual);
 	}
 }

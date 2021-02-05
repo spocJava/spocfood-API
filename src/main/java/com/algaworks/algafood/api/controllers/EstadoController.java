@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.DTO.EstadoDTO;
+import com.algaworks.algafood.api.domain_to_DTO.EstadoModel;
 import com.algaworks.algafood.domain.entitys.Estado;
 import com.algaworks.algafood.domain.repositorys.EstadoRepository;
 import com.algaworks.algafood.domain.services.CadastroEstadoService;
@@ -30,42 +32,45 @@ public class EstadoController {
 	
 	@Autowired
 	private CadastroEstadoService cadastroEstadoService;
+
+	@Autowired
+	EstadoModel estadoToDTO;
 	
 	//-----CONTROLLER_LISTAR_ESTADOS------//
 	@GetMapping
-	public List<Estado> listar() {
-		return estadoRepository.findAll();
+	public List<EstadoDTO> listar() {
+		return estadoToDTO.toListEstadoDTO(estadoRepository.findAll());
 	}
 	
 	
 	//-----CONTROLLER_BUSCAR_ESTADOS------//
 	@GetMapping("/{id}")
-	public Estado buscar(@PathVariable Long id) {
-		return cadastroEstadoService.buscar(id);
+	public EstadoDTO buscar(@PathVariable Long id) {
+		return estadoToDTO.toEstadoDTO(cadastroEstadoService.buscar(id));
 	}
 	
 	
 	//-----CONTROLLER_LISTAR_ESTADOS_POR_NOME------//
 	@GetMapping("/porNome")
-	public List<Estado> buscarPorNome(String nome){
-		return estadoRepository.findEstadoByNomeContaining(nome);
+	public List<EstadoDTO> buscarPorNome(String nome){
+		return estadoToDTO.toListEstadoDTO(estadoRepository.findEstadoByNomeContaining(nome));
 	}
 	
 	
 	//-----CONTROLLER_ADICIONAR_ESTADOS------//
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Estado adicionar(@RequestBody @Valid Estado estado){
-		return cadastroEstadoService.salvar(estado);
+	public EstadoDTO adicionar(@RequestBody @Valid Estado estado){
+		return estadoToDTO.toEstadoDTO(cadastroEstadoService.salvar(estado));
 	}
 	
 	
 	//-----CONTROLLER_ATUALIZAR_ESTADOS------//
 	@PutMapping("/{id}")
-	public Estado atualizar(@PathVariable Long id, @RequestBody @Valid Estado estado) {
+	public EstadoDTO atualizar(@PathVariable Long id, @RequestBody @Valid Estado estado) {
 		Estado estadoAtual = cadastroEstadoService.buscar(id);
 		BeanUtils.copyProperties(estado, estadoAtual, "id");
-		return cadastroEstadoService.salvar(estadoAtual);
+		return estadoToDTO.toEstadoDTO(cadastroEstadoService.salvar(estadoAtual));
 	}
 		
 	//-----CONTROLLER_REMOVER_ESTADOS------//
