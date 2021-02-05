@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class RestauranteInputModelToRestauranteDomainModel {
+public class RestauranteInputModelToDomainModel {
 
 	@Autowired
 	ModelMapper modelMapper;
     
     //--converte RestauranteInputModel em RestauranteModel
-	public Restaurante toRestauranteModel(RestauranteInputModel restauranteInputModel){
+	public Restaurante toRestauranteDamainModel(RestauranteInputModel restauranteInputModel){
 		return modelMapper.map(restauranteInputModel, Restaurante.class);
 	}
 

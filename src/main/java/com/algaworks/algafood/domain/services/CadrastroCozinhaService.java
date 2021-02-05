@@ -5,13 +5,14 @@
  */
 package com.algaworks.algafood.domain.services;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.algaworks.algafood.api.input_model.CozinhaImputModel;
+import com.algaworks.algafood.api.input_model_to_domain.CozinhaInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.Cozinha;
 import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.CozinhaEmUsoException;
 import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.CozinhaNaoEncontradaException;
@@ -22,6 +23,9 @@ public class CadrastroCozinhaService {
 
 	@Autowired
 	private CozinhaRepository cozinhaRepository; 
+
+	@Autowired
+	CozinhaInputModelToDomainModel cozinhaInputModelToDomainModel;
 	
 	//---------ADICIONAR-----------//
 	@Transactional
@@ -37,9 +41,9 @@ public class CadrastroCozinhaService {
 	
 	
 	//---------ATUALIZAR-----------//
-	public Cozinha serviceAtualizar(Long id, Cozinha cozinha) {
+	public Cozinha serviceAtualizar(Long id, CozinhaImputModel cozinha) {
 		Cozinha cozinhaAtual = serviceBuscar(id);
-		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+		cozinhaInputModelToDomainModel.copyPropertiesToCozinhaDomainModel(cozinha, cozinhaAtual);
 		return serviceSalvar(cozinhaAtual);
 	}
 	
@@ -49,6 +53,7 @@ public class CadrastroCozinhaService {
 	public void serviceExcluir(Long id) {
 		try {
 			cozinhaRepository.deleteById(id);
+			cozinhaRepository.flush();//--força o delete de forma imediata na dase de dados
 			
 		}catch(EmptyResultDataAccessException e) {
 			throw new CozinhaNaoEncontradaException(id);

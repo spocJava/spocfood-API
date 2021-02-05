@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.DTO.CozinhaDTO;
 import com.algaworks.algafood.api.domain_to_DTO.CozinhaModel;
+import com.algaworks.algafood.api.input_model.CozinhaImputModel;
+import com.algaworks.algafood.api.input_model_to_domain.CozinhaInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.Cozinha;
 import com.algaworks.algafood.domain.repositorys.CozinhaRepository;
 import com.algaworks.algafood.domain.services.CadrastroCozinhaService;
@@ -32,7 +35,10 @@ public class CozinhaController {
 	private CadrastroCozinhaService cadastroCozinha;
 
 	@Autowired
-	CozinhaModel cozinhaToDTO;
+	CozinhaModel cozinhaModel;
+
+	@Autowired
+	CozinhaInputModelToDomainModel cozinhaInputModelToDomainModel;
 	
 
 	/**
@@ -40,8 +46,8 @@ public class CozinhaController {
 	 * @return lista de cozinhas
 	 */
 	@GetMapping
-	public List<CozinhaModel> listar(){
-		return cozinhaToDTO.toListCozinhaDTO(cozinhaRepository.findAll());
+	public List<CozinhaDTO> listar(){
+		return cozinhaModel.toListCozinhaDTO(cozinhaRepository.findAll());
 	}
 	
 	
@@ -57,14 +63,14 @@ public class CozinhaController {
 	 * @return uma cozinha pelo seu id
 	 */
 	@GetMapping("/{id}")
-	public Cozinha buscar(@PathVariable Long id) {
-		return cadastroCozinha.serviceBuscar(id);
+	public CozinhaDTO buscar(@PathVariable Long id) {
+		return cozinhaModel.toCozinhaDTO(cadastroCozinha.serviceBuscar(id));
 	}
 	
 	
 	@GetMapping("/porNome")
-	public List<Cozinha> bucarPorNome(String nome){
-		return cozinhaRepository.findByNomeContaining(nome);
+	public List<CozinhaDTO> bucarPorNome(String nome){
+		return cozinhaModel.toListCozinhaDTO(cozinhaRepository.findByNomeContaining(nome));
 	}
 	
 	
@@ -78,8 +84,9 @@ public class CozinhaController {
 	 */
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha adicionar(@RequestBody @Valid  Cozinha cozinha) {
-		return cadastroCozinha.serviceSalvar(cozinha);
+	public CozinhaDTO adicionar(@RequestBody @Valid  CozinhaImputModel cozinhaInputModel) {
+		Cozinha cozinha = cozinhaInputModelToDomainModel.toCozinhaDomainModel(cozinhaInputModel);
+		return cozinhaModel.toCozinhaDTO(cadastroCozinha.serviceSalvar(cozinha));
 	}
 	
 	
@@ -88,8 +95,8 @@ public class CozinhaController {
 	 * @return Uma Cozinha modificada.
 	 */
 	@PutMapping("/{id}")
-	public  Cozinha atualizar(@PathVariable Long id, @RequestBody @Valid Cozinha cozinha) {
-		return cadastroCozinha.serviceAtualizar(id, cozinha);
+	public  CozinhaDTO atualizar(@PathVariable Long id, @RequestBody @Valid CozinhaImputModel cozinhaImputModel) {
+		return cozinhaModel.toCozinhaDTO(cadastroCozinha.serviceAtualizar(id, cozinhaImputModel));
 	}
 	
 	

@@ -14,34 +14,33 @@ import com.algaworks.algafood.domain.repositorys.EstadoRepository;
 @Service
 public class CadastroEstadoService {
 
-	
-	 @Autowired 
-	 private EstadoRepository estadoRepository;
+	@Autowired
+	private EstadoRepository estadoRepository;
 
-	 //-----SERVICE_SALVAR_ESTADOS-----//
-	 @Transactional
-	 public Estado salvar(Estado estado) {
-		 return estadoRepository.save(estado);
-	 }
-	 
-	 //-----SERVICE_BUSCAR_ESTADOS-----//
-	 public Estado buscar(Long id) {
-		 return estadoRepository.findById(id).orElseThrow(() -> new EstadoNaoEncontradoException(id));
-	 }
-	 
+	// -----SERVICE_SALVAR_ESTADOS-----//
+	@Transactional
+	public Estado salvar(Estado estado) {
+		return estadoRepository.save(estado);
+	}
 
-	//-----SERVICE_REMOVER_ESTADOS-----//
-	 @Transactional
-	 public void remover(Long id) {
-		 try {
-			 estadoRepository.deleteById(id);
-			 
-		 }catch(EmptyResultDataAccessException e) {
-			 throw new EstadoNaoEncontradoException(id);
-			 
-		 }catch(DataIntegrityViolationException e) {
-			 throw new EstadoEmUsoException(id);
-		 }
-			 
-	 }
+	// -----SERVICE_BUSCAR_ESTADOS-----//
+	public Estado buscar(Long id) {
+		return estadoRepository.findById(id).orElseThrow(() -> new EstadoNaoEncontradoException(id));
+	}
+
+	// -----SERVICE_REMOVER_ESTADOS-----//
+	@Transactional
+	public void remover(Long id) {
+		try {
+			estadoRepository.deleteById(id);
+			estadoRepository.flush();//--força o delete de forma imediata na base de dados
+
+		} catch (EmptyResultDataAccessException e) {
+			throw new EstadoNaoEncontradoException(id);
+
+		} catch (DataIntegrityViolationException e) {
+			throw new EstadoEmUsoException(id);
+		}
+
+	}
 }

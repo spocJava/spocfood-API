@@ -1,7 +1,7 @@
 package com.algaworks.algafood.domain.services;
 
 import com.algaworks.algafood.api.input_model.RestauranteInputModel;
-import com.algaworks.algafood.api.input_model_to_domain.RestauranteInputModelToRestauranteDomainModel;
+import com.algaworks.algafood.api.input_model_to_domain.RestauranteInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.Cozinha;
 import com.algaworks.algafood.domain.entitys.Restaurante;
 import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.RestauranteNaoEncontradaException;
@@ -21,7 +21,7 @@ public class CadastroRestauranteService {
 	private CadrastroCozinhaService cozinhaService;
 
 	@Autowired
-	RestauranteInputModelToRestauranteDomainModel restInputToModel;
+	RestauranteInputModelToDomainModel restInputToModel;
 	
 	
 	//---------SERVICE_ADICIONAR_RESTAURANTES----------//

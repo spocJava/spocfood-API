@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.domain_to_DTO;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.algaworks.algafood.api.DTO.CozinhaDTO;
 import com.algaworks.algafood.domain.entitys.Cozinha;
 
 import org.modelmapper.ModelMapper;
@@ -17,12 +18,12 @@ public class CozinhaModel {
     ModelMapper modelMapper;
 
     //--CozinhaModel to CozinhaDTO
-    public CozinhaModel toCozinhaDTO(Cozinha cozinha){
-        return modelMapper.map(cozinha, CozinhaModel.class);
+    public CozinhaDTO toCozinhaDTO(Cozinha cozinha){
+        return modelMapper.map(cozinha, CozinhaDTO.class);
     }
 
     //--Retorna uma lista de cozinhaDTOs
-    public List<CozinhaModel> toListCozinhaDTO(List<Cozinha> cozinhas){
+    public List<CozinhaDTO> toListCozinhaDTO(List<Cozinha> cozinhas){
         return cozinhas.stream().map(cozinha -> toCozinhaDTO(cozinha))
             .collect(Collectors.toList());
     }
