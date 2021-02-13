@@ -10,7 +10,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
@@ -25,20 +29,21 @@ public class Usuario {
 	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(nullable = false)
+
+	@NotBlank
 	private String nome;
-	
-	@Column(nullable = false)
+
+	@Email
 	private String email;
-	
-	@Column(nullable = false)
+
+	@NotBlank
 	private String senha;
-	
+
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDate dataCadrastro;
-	
+
+	@JsonIgnore
 	@ManyToMany()
 	private List<Grupo> grupos = new ArrayList<>();
 }

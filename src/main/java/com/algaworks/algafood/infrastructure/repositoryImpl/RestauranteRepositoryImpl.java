@@ -7,8 +7,9 @@
  */
 package com.algaworks.algafood.infrastructure.repositoryImpl;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.algaworks.algafood.domain.entitys.Restaurante;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,11 +18,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import com.algaworks.algafood.domain.entitys.Restaurante;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class RestauranteRepositoryImpl{

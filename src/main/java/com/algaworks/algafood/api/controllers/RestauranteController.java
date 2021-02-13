@@ -3,13 +3,17 @@ package com.algaworks.algafood.api.controllers;
 import java.util.List;
 import javax.validation.Valid;
 
+import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.CidadeNaoEncontradaException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.DTO.RestauranteDTO;
@@ -65,7 +69,6 @@ public class RestauranteController {
 		return restauranteModel.toListRestauranteDTOs(restauranteRepository.buscarPorTaxa(nome, tx_inicial, tx_final));
 	}
 	
-	
 	//------CONTROLLER_ADICIONAR_RESTAURANTES------//
 	@PostMapping
 	public RestauranteDTO adicionar(@RequestBody @Valid RestauranteInputModel restauranteInputModel) {
@@ -73,7 +76,7 @@ public class RestauranteController {
 			Restaurante restaurante = inputToDomain.toRestauranteDamainModel(restauranteInputModel);
 			return restauranteModel.toRestauranteDTO(restauranteService.serviceAdicionar(restaurante));
 			
-		}catch(CozinhaNaoEncontradaException e) {
+		}catch(CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
@@ -85,9 +88,22 @@ public class RestauranteController {
 		try {
 			return restauranteModel.toRestauranteDTO(restauranteService.serviceAtualizar(id, restauranteInputModel));
 
-		}catch(CozinhaNaoEncontradaException e) {
+		}catch(CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
 
+	//- Ativa o restaurante
+	@PutMapping("/{restauranteId}/ativar")
+	@ResponseStatus(HttpStatus.NO_CONTENT)  // Com o PUT no recurso restaurantes/restauranteId/ativar você ativa um restaurante
+	public void ativar(@PathVariable Long restauranteId) {
+		restauranteService.ativar(restauranteId);
+	}
+
+	//- Inativa o restaurante
+	@DeleteMapping("/{restauranteId}/ativar")
+	@ResponseStatus(HttpStatus.NO_CONTENT)  // Com o DELETE no recurso restaurantes/restauranteId/ativar você inativa um restaurante
+	public void inativar(@PathVariable Long restauranteId) {
+		restauranteService.inativar(restauranteId);
+	}
 }

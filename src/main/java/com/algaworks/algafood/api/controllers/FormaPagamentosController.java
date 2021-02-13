@@ -5,6 +5,10 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.DTO.FormaPagamentoDTO;
+import com.algaworks.algafood.api.domain_to_DTO.FormaPagamentoModel;
+import com.algaworks.algafood.api.input_model.FormaPagamentoInputModel;
+import com.algaworks.algafood.api.input_model_to_domain.FormaPagamentoInputModelToDomainModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,62 +38,44 @@ public class FormaPagamentosController {
 	
 	@Autowired
 	private FormaPagamentoService formaPagamentoService;
+
+	@Autowired
+	FormaPagamentoModel formaPagamentoModel;
+
+	@Autowired
+	FormaPagamentoInputModelToDomainModel formaPagamentoInputModelToDomainModel;
 	
 	//-----CONTROLLER_LISTAR_FORMAS_DE_PAGAMENTOS------//
 	@GetMapping
-	public List<FormaPagamento> listar(){
-		return formaPagamentoRepository.findAll();
+	public List<FormaPagamentoDTO> listar(){
+		return formaPagamentoModel.toListFormaPagametoDTO(formaPagamentoRepository.findAll());
 	}
 	
 	//-----CONTROLLER_BUSCAR_FORMA_DE_PAGAMENTO------//
 	@GetMapping("/{id}")
-	public ResponseEntity<FormaPagamento> buscar(@PathVariable Long id){
-		
-		Optional<FormaPagamento> formaPagamentoOptional = formaPagamentoRepository.findById(id);
-		
-		if(formaPagamentoOptional.isPresent()) {
-			return ResponseEntity.ok(formaPagamentoOptional.get());
-		}
-		
-		return ResponseEntity.notFound().build();
+	public FormaPagamentoDTO buscar(@PathVariable Long id){
+		return formaPagamentoModel.toFormaPagametoDTO(formaPagamentoService.getFormaPagamento(id));
 	}
 	
 	//-----CONTROLLER_ADICIONAR_FORMAS_DE_PAGAMNETO------//
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public FormaPagamento adicionar(@RequestBody @Valid FormaPagamento formaPagamento){
-		return formaPagamentoRepository.save(formaPagamento);
+	public FormaPagamentoDTO adicionar(@RequestBody @Valid FormaPagamentoInputModel formaPagamentoInputModel){
+		FormaPagamento formaPagamento = formaPagamentoInputModelToDomainModel.toFormaPagamentoDomainModel(formaPagamentoInputModel);
+		return formaPagamentoModel.toFormaPagametoDTO(formaPagamentoService.addFormaPagamento(formaPagamento));
 	}
 	
 	//-----CONTROLLER_ATUALIZAR_FORMAS_DE_PAGAMNETO------//
 	@PutMapping("/{id}")
-	public ResponseEntity<FormaPagamento> atualizar(@PathVariable Long id, 
-			@RequestBody @Valid FormaPagamento formaPagamento){
-		Optional<FormaPagamento> formaPagamentoAtualOptional = formaPagamentoRepository.findById(id);
-		
-		if(formaPagamentoAtualOptional.isPresent()) {
-			
-			BeanUtils.copyProperties(formaPagamento, formaPagamentoAtualOptional.get(), "id");
-			FormaPagamento formaPag = formaPagamentoRepository.save(formaPagamentoAtualOptional.get());
-			return ResponseEntity.ok(formaPag);
-		}
-		
-		return ResponseEntity.notFound().build();
+	public FormaPagamentoDTO atualizar(@PathVariable Long id, @RequestBody @Valid FormaPagamentoInputModel formaPagamentoInputModel){
+		return formaPagamentoModel.toFormaPagametoDTO(formaPagamentoService.upDateFormaPagamento(id, formaPagamentoInputModel));
 	}
 	
 	//-----CONTROLLER_REMOVER_FORMAS_DE_PAGAMNETO------//
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> remover(@PathVariable Long id){
-		try {
-			formaPagamentoService.excluir(id);
-			return ResponseEntity.noContent().build();
-			
-		}catch(EntidadeNaoEncontradaExecption e) {
-			return ResponseEntity.notFound().build();
-			
-		}catch(EntidadeEmUsoExeption e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		}
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long id){
+		formaPagamentoService.excluir(id);
 	}
 	
 }

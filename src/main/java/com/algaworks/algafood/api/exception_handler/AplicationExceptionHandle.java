@@ -262,8 +262,7 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		String detail = ex.getMessage();
 		
 		HandleErrorMensage problem = createHandleErrorMensage(status, erroType, detail)
-				.userMessage("Ocorreu um erro interno inesperado no sistema. Tente novamente e se o problema persistir, entre em contato"
-				  + "com o administrador do sistema")
+				.userMessage(ex.getMessage())
 				.timestamp(LocalDateTime.now())
 				.build();
 		

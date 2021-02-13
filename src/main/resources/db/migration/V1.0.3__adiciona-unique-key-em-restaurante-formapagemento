@@ -1,0 +1,2 @@
+ALTER TABLE restaurante_formas_pagamento
+ADD UNIQUE INDEX formas_pagamento_id_UNIQUE (formas_pagamento_id, restaurante_id);

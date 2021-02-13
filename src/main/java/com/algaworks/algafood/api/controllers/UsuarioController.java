@@ -3,15 +3,21 @@ package com.algaworks.algafood.api.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import com.algaworks.algafood.api.DTO.UsuarioDTO;
+import com.algaworks.algafood.api.domain_to_DTO.UsuarioModel;
+import com.algaworks.algafood.api.input_model.SenhaUsuarioInputModel;
+import com.algaworks.algafood.api.input_model.UsuarioInputModel;
+import com.algaworks.algafood.api.input_model.UsuarioInputModelUpDate;
+import com.algaworks.algafood.api.input_model_to_domain.UsuarioInputModelToDomainModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.algaworks.algafood.domain.entitys.Usuario;
 import com.algaworks.algafood.domain.services.UsuarioService;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -19,22 +25,48 @@ public class UsuarioController {
 
 	@Autowired
 	private UsuarioService usuarioService;
+	@Autowired
+	private UsuarioModel usuarioModel;
+	@Autowired
+	private UsuarioInputModelToDomainModel inputModelToDomainModel;
+
 	
 	//---- Listar todos os usuários da base de dados ----->
 	@GetMapping
-	public List<Usuario> listar(){
-		return usuarioService.getAllUsers();
+	public List<UsuarioDTO> listar(){
+		return usuarioModel.usuarioDTOList(usuarioService.getAllUsers());
 	}
 	
 	//---- Buscar um usuário pelo seu id ---->
-	@GetMapping("/{id}")
-	public ResponseEntity<Usuario> buscarById(@PathVariable Long id) {
-		Optional<Usuario> usuarioOptional = usuarioService.getUserById(id);
-		
-		if(usuarioOptional.isPresent()) {
-			return ResponseEntity.ok(usuarioOptional.get());
-		}
-		
-		return ResponseEntity.notFound().build();
+	@GetMapping("/{usuarioId}")
+	public UsuarioDTO buscarById(@PathVariable Long usuarioId) {
+		return usuarioModel.toUsuarioDTO(usuarioService.getUserById(usuarioId));
+	}
+
+	//---- Adicionar um novo usuario na base de dados ---->
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public UsuarioDTO addUsuario(@RequestBody @Valid UsuarioInputModel inputModel){
+		Usuario usuario = inputModelToDomainModel.toDomainModel(inputModel);
+		return usuarioModel.toUsuarioDTO(usuarioService.addUsuario(usuario));
+	}
+
+	//---- Atualiza um usuario presente na base de dados ---->
+	@PutMapping("/{usuarioId}")
+	public UsuarioDTO upDateUsuario(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInputModelUpDate inputModel){
+		return usuarioModel.toUsuarioDTO(usuarioService.upDateUsuario(usuarioId, inputModel));
+	}
+
+	@PutMapping("/{usuarioId}/senha")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void upDateSenha(@PathVariable Long usuarioId, @RequestBody @Valid SenhaUsuarioInputModel senha){
+		usuarioService.upDateSenha(usuarioId, senha.getSenhaAtual(), senha.getNovaSenha());
+	}
+
+	//---- Remove um usuario pela seu id da base de dados ---->
+	@DeleteMapping("/{usuarioId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void removeUsuario(@PathVariable Long usuarioId){
+		usuarioService.deleteUserById(usuarioId);
 	}
 }

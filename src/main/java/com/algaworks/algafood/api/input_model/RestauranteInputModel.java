@@ -23,6 +23,10 @@ public class RestauranteInputModel {
     @NotNull
     private CozinhaId cozinha;
 
+    @Valid
+    @NotNull
+    private EnderecoModel endereco;
+
     @Getter
     @Setter
     public static class CozinhaId{
