@@ -1,33 +1,30 @@
 package com.algaworks.algafood.domain.services;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.algaworks.algafood.api.input_model.UsuarioInputModel;
 import com.algaworks.algafood.api.input_model.UsuarioInputModelUpDate;
 import com.algaworks.algafood.api.input_model_to_domain.UsuarioInputModelToDomainModel;
+import com.algaworks.algafood.domain.entitys.Grupo;
+import com.algaworks.algafood.domain.entitys.Usuario;
 import com.algaworks.algafood.domain.exeptions.NegocioException;
 import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.UsuarioEmUsoException;
 import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.UsuarioNaoEncontradoException;
+import com.algaworks.algafood.domain.repositorys.UsuarioRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-
-import com.algaworks.algafood.domain.entitys.Usuario;
-import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.EntidadeEmUsoExeption;
-import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.EntidadeNaoEncontradaExecption;
-import com.algaworks.algafood.domain.repositorys.UsuarioRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
+@AllArgsConstructor
 @Service
 public class UsuarioService {
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
-	@Autowired
-	private UsuarioInputModelToDomainModel inputModelToDomainModel;
+	private final UsuarioRepository usuarioRepository;
+	private final UsuarioInputModelToDomainModel inputModelToDomainModel;
+	private final GrupoService grupoService;
 
 	
 	//---- Lista todos os usuários do sistema ---->
@@ -83,5 +80,21 @@ public class UsuarioService {
 		}catch(DataIntegrityViolationException e) {
 			throw new UsuarioEmUsoException(id);
 		}
+	}
+
+	//---- Adiciona o usuário a um grupo de permissão ---->
+	@Transactional
+	public void addGrupo(Long grupoId, Long usuarioId){
+		Usuario usuario = getUserById(usuarioId);
+		Grupo grupo = grupoService.getGroupById(grupoId);
+		usuario.addGrupo(grupo);
+	}
+
+	//---- Remove usuário de um grupo de permissão ---->
+	@Transactional
+	public void removeGrupo(Long usuarioId, Long grupoId){
+		Usuario usuario = getUserById(usuarioId);
+		Grupo grupo = grupoService.getGroupById(grupoId);
+		usuario.removeGrupo(grupo);
 	}
 }

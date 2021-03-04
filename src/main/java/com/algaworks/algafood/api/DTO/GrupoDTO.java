@@ -10,10 +10,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class GrupoDTO {
 
-    @NotNull
     private Long id;
-
-    @NotBlank
     private String nome;
 
 }

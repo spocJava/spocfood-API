@@ -2,30 +2,28 @@ package com.algaworks.algafood.domain.services;
 
 import com.algaworks.algafood.api.input_model.RestauranteInputModel;
 import com.algaworks.algafood.api.input_model_to_domain.RestauranteInputModelToDomainModel;
-import com.algaworks.algafood.domain.entitys.Cidade;
-import com.algaworks.algafood.domain.entitys.Cozinha;
-import com.algaworks.algafood.domain.entitys.FormaPagamento;
-import com.algaworks.algafood.domain.entitys.Restaurante;
+import com.algaworks.algafood.domain.entitys.*;
+import com.algaworks.algafood.domain.exeptions.NegocioException;
 import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.RestauranteNaoEncontradaException;
 import com.algaworks.algafood.domain.repositorys.RestauranteRepository;
-
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+@AllArgsConstructor
 @Service
 public class CadastroRestauranteService {
 
-	@Autowired
-	private RestauranteRepository restauranteRepository;
-	@Autowired
-	private CadrastroCozinhaService cozinhaService;
-	@Autowired
-	private CadastroCidadeService cidadeService;
-	@Autowired
-	RestauranteInputModelToDomainModel restInputToModel;
-	@Autowired
-	FormaPagamentoService formaPagamentoService;
+
+	private final RestauranteRepository restauranteRepository;
+	private final CadrastroCozinhaService cozinhaService;
+	private final CadastroCidadeService cidadeService;
+	private final RestauranteInputModelToDomainModel restInputToModel;
+	private final FormaPagamentoService formaPagamentoService;
+	private final UsuarioService usuarioService;
 	
 	
 	//---------SERVICE_ADICIONAR_RESTAURANTES----------//
@@ -57,6 +55,27 @@ public class CadastroRestauranteService {
 		restaurante.inativar();
 	}
 
+	//--------- ATIVAR VÁRIOS RESTAURANTE ----------//
+	@Transactional
+	public void ativarGrupoRest(List<Long> restauranteIds){
+		try{
+			restauranteIds.forEach(this::ativar);
+		}catch(RestauranteNaoEncontradaException ex){
+			throw new NegocioException(ex.getMessage(), ex);
+		}
+	}
+
+	//--------- INATIVAR VÁRIOS RESTAURANTE ----------//
+	@Transactional
+	public void inativarGrupoRest(List<Long> restauranteIds){
+		try{
+			restauranteIds.forEach(this::inativar);
+		}catch(RestauranteNaoEncontradaException ex){
+			throw new NegocioException(ex.getMessage(), ex);
+		}
+
+	}
+
 	//--------- ASSOCIAR NOVA FORMA DE PAGAMENTO ----------//
 	@Transactional
 	public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId){
@@ -80,9 +99,41 @@ public class CadastroRestauranteService {
 	
 	
 	//---------SERVICE_ATUALIZAR_RESTAURANTES----------//
+	@Transactional
 	public Restaurante serviceAtualizar(Long id, RestauranteInputModel restInput) {
 		Restaurante restauranteAtual = serviceBuscar(id);
         restInputToModel.copyInputToModel(restInput, restauranteAtual);
 		return serviceAdicionar(restauranteAtual);
+	}
+
+	//---------SERVICE_FECHAR_RESTAURANTE----------//
+	@Transactional
+	public void fecharRestaurante(Long restauranteId){
+		Restaurante restaurante = serviceBuscar(restauranteId);
+		restaurante.fecharRestaurante();
+	}
+
+	//---------SERVICE_ABRIR_RESTAURANTE----------//
+	@Transactional
+	public void abrirRestaurante(Long restauranteId){
+		Restaurante restaurante = serviceBuscar(restauranteId);
+		restaurante.abrirRestaurante();
+	}
+
+	//---------ADICIONA_RESPONSAVEL_PELO_RESTAURANTE----------//
+	@Transactional
+	public void addResponsavel(Long restauranteId, Long usuarioId){
+		Restaurante restaurante = serviceBuscar(restauranteId);
+		Usuario usuario = usuarioService.getUserById(usuarioId);
+		restaurante.addResponsavel(usuario);
+	}
+
+
+	//---------ADICIONA_RESPONSAVEL_PELO_RESTAURANTE----------//
+	@Transactional
+	public void removerResponsavel(Long restauranteId, Long usuarioId){
+		Restaurante restaurante = serviceBuscar(restauranteId);
+		Usuario usuario = usuarioService.getUserById(usuarioId);
+		restaurante.removerResponsavel(usuario);
 	}
 }

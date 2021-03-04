@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -42,14 +43,21 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 	
 	@Autowired
 	MessageSource messageSource; // resolve mensagens
-	
-	//---Esse metodo customiza a exception MethodArgumentNotValidException 
+
+	@Override
+	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		return handleValidationInternal(ex, headers, status, request, ex.getBindingResult());
+	}
+
+	//---Esse metodo customiza a exception MethodArgumentNotValidException
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		
-		BindingResult bindingResult = ex.getBindingResult(); // pega todos os campos com erro
-		
+		return handleValidationInternal(ex, headers, status, request, ex.getBindingResult());
+	}
+
+	private ResponseEntity<Object> handleValidationInternal(Exception ex, HttpHeaders headers, HttpStatus status, WebRequest request,
+					BindingResult bindingResult) {
 		HandleErrorType type = HandleErrorType.DADOS_INVALIDOS;
 		String detail = "Um ou mais campos estão inválido. faça o preenchimento correto e tente novamente";
 		List<HandleErrorMensage.Field> problemFields = bindingResult.getFieldErrors().stream()
@@ -60,17 +68,17 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 						.userMessage(message) //                         3ª - pega a mensagem do erro
 						.build();//                                      4ª - cria o(s) objeto Field
 	             })//                                                    5ª - coleta os objetos e forma uma list de Fields passada para problemFields
-				.collect(Collectors.toList()); 
-		
+				.collect(Collectors.toList());
+
 		HandleErrorMensage problem = createHandleErrorMensage(status, type, detail)
 				.userMessage(detail)
 				.timestamp(LocalDateTime.now())
 				.fields(problemFields)
 				.build();
-		
+
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
-	
+
 	/**
 	 * Esse ExceptionHandle pode capturar exceções com diferentes causas.
 	 * EXEM:  InvalidFormatException

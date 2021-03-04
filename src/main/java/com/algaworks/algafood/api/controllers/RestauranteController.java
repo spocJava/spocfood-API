@@ -4,6 +4,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.CidadeNaoEncontradaException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,19 +29,13 @@ import com.algaworks.algafood.domain.services.CadastroRestauranteService;
 
 @RestController
 @RequestMapping("/restaurantes")
+@AllArgsConstructor
 public class RestauranteController {
 
-	@Autowired
-	private RestauranteRepository restauranteRepository;
-	
-	@Autowired
-	private CadastroRestauranteService restauranteService;
-
-	@Autowired
-	private RestauranteModel restauranteModel;
-
-	@Autowired
-	RestauranteInputModelToDomainModel inputToDomain;
+	private final RestauranteRepository restauranteRepository;
+	private final CadastroRestauranteService restauranteService;
+	private final RestauranteModel restauranteModel;
+	private final RestauranteInputModelToDomainModel inputToDomain;
 	
 	
 	//------CONTROLLER_LISTAR_RESTAURANTES-------//
@@ -48,8 +43,7 @@ public class RestauranteController {
 	public List<RestauranteDTO> listar(){
 		return restauranteModel.toListRestauranteDTOs(restauranteRepository.findAll());
 	}
-	
-	
+
 	//------CONTROLLER_BUSCAR_RESTAURANTES------//
 	@GetMapping("/{id}")
 	public RestauranteDTO buscar(@PathVariable Long id) {
@@ -80,8 +74,7 @@ public class RestauranteController {
 			throw new NegocioException(e.getMessage());
 		}
 	}
-	
-	
+
 	//------CONTROLLER_ATUALIZAR_RSTAURANTES------//
 	@PutMapping("/{id}")
 	public RestauranteDTO atualizar(@PathVariable Long id, @RequestBody @Valid RestauranteInputModel restauranteInputModel) {
@@ -93,17 +86,45 @@ public class RestauranteController {
 		}
 	}
 
-	//- Ativa o restaurante
+	//------ATIVAR-RESTAURANTE------//
 	@PutMapping("/{restauranteId}/ativar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)  // Com o PUT no recurso restaurantes/restauranteId/ativar você ativa um restaurante
 	public void ativar(@PathVariable Long restauranteId) {
 		restauranteService.ativar(restauranteId);
 	}
 
-	//- Inativa o restaurante
+	//------INATIVAR-RESTAURANTE------//
 	@DeleteMapping("/{restauranteId}/ativar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)  // Com o DELETE no recurso restaurantes/restauranteId/ativar você inativa um restaurante
 	public void inativar(@PathVariable Long restauranteId) {
 		restauranteService.inativar(restauranteId);
+	}
+
+	//------ATIVAR-MULTIPLA-DE-RESTAURANTES------//
+	@PutMapping("/ativacao-multipla")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativarMultiplosRest(@RequestBody List<Long> restauranteId){
+		restauranteService.ativarGrupoRest(restauranteId);
+	}
+
+	//------INATIVAR-MULTIPLA-DE-RESTAURANTES------//
+	@DeleteMapping("/ativacao-multipla")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativarMultiplosRest(@RequestBody List<Long> restauranteId){
+		restauranteService.inativarGrupoRest(restauranteId);
+	}
+
+	//------ABRIR-RESTAURANTE-INICIO-DO-ESPEDIENTE------//
+	@PutMapping("/{restauranteId}/abertura")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void abrirRestaurante(@PathVariable  Long restauranteId){
+		restauranteService.abrirRestaurante(restauranteId);
+	}
+
+	//------FECHAR-RESATAURANTE-FIM-DO-ESPEDIENTE------//
+	@PutMapping("/{restauranteId}/fechamento")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void fecharRestaurante(@PathVariable Long restauranteId){
+		restauranteService.fecharRestaurante(restauranteId);
 	}
 }

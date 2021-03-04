@@ -1,7 +1,9 @@
 package com.algaworks.algafood.domain.entitys;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,5 +32,15 @@ public class Grupo {
 
 	@JsonIgnore
 	@ManyToMany
-	private List<Permicao> permicoes = new ArrayList<>();
+	private Set<Permicao> permicoes = new HashSet<>();
+
+	//-- Adiciona permição --//
+	public Boolean addPermicao(Permicao permicao){
+		return getPermicoes().add(permicao);
+	}
+
+	//-- Remove permição --//
+	public Boolean removePermicao(Permicao permicao){
+		return getPermicoes().remove(permicao);
+	}
 }

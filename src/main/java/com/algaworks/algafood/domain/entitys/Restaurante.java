@@ -6,17 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
+import com.algaworks.algafood.domain.exeptions.NegocioException;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -40,6 +32,8 @@ public class Restaurante {
 	private Double taxaFrete;
 	
 	private Boolean ativo = Boolean.TRUE;
+
+	private Boolean aberto = Boolean.FALSE;
 	
 	@JsonIgnore
 	@CreationTimestamp // Cria uma data quando é criado um novo recurso.
@@ -90,7 +84,22 @@ public class Restaurante {
 	 */
 	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante")
-	private List<Produto> produtos = new ArrayList<>();
+	private Set<Produto> produtos = new HashSet<>();
+
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(name = "restaurante_usuario_responsavel",
+	joinColumns = @JoinColumn(name = "restaurante_id"),
+	inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+	private Set<Usuario> responsaveis = new HashSet<>();
+
+	//-- chega se a forma de pagamento é aceita pelo restaurante
+	public void formaDePagamentoNaoAceita(FormaPagamento formaPagamento){
+		if(!this.getFormasPagamento().contains(formaPagamento)){
+			throw new NegocioException(String.format("A forma de pagamento <%s> não é aceita nesse restaurante, " +
+					formaPagamento.getDescricao()));
+		}
+	}
 
 	//-- Ativa o restaurante
 	public void ativar() {
@@ -110,5 +119,25 @@ public class Restaurante {
 	//-- Desassocia uma forma de pagamento do restaurante
 	public boolean desassociarFormaPagamento(FormaPagamento formaPagamento){
 		return getFormasPagamento().remove(formaPagamento);
+	}
+
+	//-- Fecha o restaurante
+	public void fecharRestaurante(){
+		setAberto(false);
+	}
+
+	//-- Abre o restaurante
+	public void abrirRestaurante(){
+		setAberto(true);
+	}
+
+	//-- Addiciona o responsável pelo restaurante
+	public Boolean addResponsavel(Usuario usuario){
+		return getResponsaveis().add(usuario);
+	}
+
+	//-- remove o responsável pelo restaurante
+	public Boolean removerResponsavel(Usuario usuario){
+		return getResponsaveis().remove(usuario);
 	}
 }

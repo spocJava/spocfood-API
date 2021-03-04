@@ -1,0 +1,1 @@
+alter table permicao rename column descricão to descricao;

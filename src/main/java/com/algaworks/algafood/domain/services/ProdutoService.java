@@ -3,6 +3,12 @@ package com.algaworks.algafood.domain.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.algaworks.algafood.api.input_model.ProdutoInputModel;
+import com.algaworks.algafood.api.input_model_to_domain.ProdutoInputModelToDomainModel;
+import com.algaworks.algafood.domain.entitys.Restaurante;
+import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.ProdutoEmUsoException;
+import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.ProdutoNaoEncontradaException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,21 +25,18 @@ public class ProdutoService {
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
+	@Autowired
+	private ProdutoInputModelToDomainModel produtoToDomainModel;
 	
 	//---- Lista todos os produtos da base de dados ---->
-	public List<Produto> getAllProducts(){
-		return produtoRepository.findAll();
+	public List<Produto> getAllProducts(Restaurante restaurante){
+		return produtoRepository.findByRestaurante(restaurante);
 	}
 	
 	//---- Busca um Produto pelo seu id ---->
-	public Optional<Produto> getProductById(Long id) {
-		try {
-			return produtoRepository.findById(id);
-			
-		}catch(EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaExecption(String.format(
-					"Não existe um Produto com o ID=%d, na base de dados.", id));
-		}
+	public Produto getProductById(Long restauranteId, Long produtoId) {
+		return produtoRepository.findById(
+				restauranteId, produtoId).orElseThrow(() -> new ProdutoNaoEncontradaException(restauranteId, produtoId));
 	}
 	
     //---- adiciona um Produto a base de dados ---->
@@ -41,22 +44,12 @@ public class ProdutoService {
 	public Produto addProduct(Produto produto) {
 		return produtoRepository.save(produto);
 	}
-	
-	//---- Remove um Produto pelo seu id ---->
+
 	@Transactional
-	public void deleteProductById(Long id) {
-		try {
-			produtoRepository.deleteById(id);
-			
-		}catch(EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaExecption(String.format(
-					"Não existe um Produto com o ID=%d, na base de dados.", id));
-			
-		}catch(DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoExeption(String.format(
-					"Não foi possível remover o 'Produto' de ID=%d, Pois está em uso em outra entidade", id));
-		}
+	public Produto upDateProduct(Long restId ,Long productId, ProdutoInputModel product){
+		Produto produtoAtual = getProductById(restId, productId);
+		produtoToDomainModel.inputToDomail(product);
+		produtoToDomainModel.copyProperties(product, produtoAtual);
+		return addProduct(produtoAtual);
 	}
-	
-	
 }

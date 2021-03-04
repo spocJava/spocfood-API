@@ -1,19 +1,19 @@
 package com.algaworks.algafood.api.controllers;
 
-import java.util.List;
-
 import com.algaworks.algafood.api.DTO.GrupoDTO;
 import com.algaworks.algafood.api.domain_to_DTO.GrupoModel;
 import com.algaworks.algafood.api.input_model.GrupoInputModel;
 import com.algaworks.algafood.api.input_model_to_domain.GrupoInputModelToDomainModel;
+import com.algaworks.algafood.domain.entitys.Grupo;
+import com.algaworks.algafood.domain.entitys.Permicao;
+import com.algaworks.algafood.domain.services.GrupoService;
+import com.algaworks.algafood.domain.services.PermicaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.algaworks.algafood.domain.entitys.Grupo;
-import com.algaworks.algafood.domain.services.GrupoService;
-
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/grupos")
@@ -25,6 +25,9 @@ public class GrupoController {
 	private GrupoModel grupoModel;
 	@Autowired
 	private GrupoInputModelToDomainModel inputModelToDomainModel;
+	@Autowired
+	private PermicaoService permicaoService;
+
 
 	
 	//--- Listar todos os grupos --->
@@ -47,12 +50,13 @@ public class GrupoController {
 		return grupoModel.toGrupoDTO(grupoService.addGroup(grupo));
 	}
 
-	//--- Atuaizar um grupo da base de dados --->
+	//--- Atualizar um grupo na base de dados --->
 	@PutMapping("/{grupoId}")
 	public GrupoDTO upDateGrupo(@PathVariable Long grupoId, @RequestBody @Valid GrupoInputModel inputModel){
 		return grupoModel.toGrupoDTO(grupoService.upDate(grupoId, inputModel));
 	}
 
+	//--- Deleta um grupo da base de dados ---->
 	@DeleteMapping("/{grupoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delGrupo(@PathVariable Long grupoId){

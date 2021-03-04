@@ -1,24 +1,16 @@
 package com.algaworks.algafood.domain.entitys;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.CreationTimestamp;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -45,5 +37,15 @@ public class Usuario {
 
 	@JsonIgnore
 	@ManyToMany()
-	private List<Grupo> grupos = new ArrayList<>();
+	private Set<Grupo> grupos = new HashSet<>();
+
+	//-- Adiciona um grupo de permissão ao usuário
+	public Boolean addGrupo(Grupo grupo){
+		return getGrupos().add(grupo);
+	}
+
+	//-- Remove o usuário de um grupo de permissão
+	public Boolean removeGrupo(Grupo grupo){
+		return getGrupos().remove(grupo);
+	}
 }

@@ -12,6 +12,7 @@ public class RestauranteDTO {
     private Double taxaFrete;
     private CozinhaDTO cozinha;
     private Boolean ativo;
+    private Boolean aberto;
     private EnderecoDTO endereco;
     
 }
