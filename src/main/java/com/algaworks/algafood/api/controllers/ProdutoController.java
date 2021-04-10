@@ -1,9 +1,9 @@
 package com.algaworks.algafood.api.controllers;
 
 import com.algaworks.algafood.api.DTO.ProdutoDTO;
-import com.algaworks.algafood.api.domain_to_DTO.ProdutoModel;
+import com.algaworks.algafood.api.DTO.domain_to_DTO.ProdutoModel;
 import com.algaworks.algafood.api.input_model.ProdutoInputModel;
-import com.algaworks.algafood.api.input_model_to_domain.ProdutoInputModelToDomainModel;
+import com.algaworks.algafood.api.input_model.input_model_to_domain.ProdutoInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.Produto;
 import com.algaworks.algafood.domain.entitys.Restaurante;
 import com.algaworks.algafood.domain.services.CadastroRestauranteService;
@@ -28,21 +28,21 @@ public class ProdutoController {
 	@Autowired
 	private ProdutoInputModelToDomainModel produtoToDomainModel;
 
-	
-	//---- Lista todos os produtos da base de dados --->
+
 	@GetMapping
-	public List<ProdutoDTO> listar(@PathVariable Long restauranteId){
+	public List<ProdutoDTO> listar(@PathVariable Long restauranteId,
+								   @RequestParam(required = false) boolean incluirInativos) {
 		Restaurante restaurante = cadastroRestauranteService.serviceBuscar(restauranteId);
-		return produtoModel.toListProdutoDTO(produtoService.getAllProducts(restaurante));
+		return produtoModel.toListProdutoDTO(produtoService.getAllProducts(restaurante, incluirInativos));
 	}
-	
-	//---- Busca Produtos pelo seu id ---->
+
+
 	@GetMapping("/{productId}")
 	public ProdutoDTO buscarPorId(@PathVariable Long restauranteId  ,@PathVariable Long productId) {
 		return produtoModel.toProdutoDTO(produtoService.getProductById(restauranteId, productId));
 	}
 
-	//---- Adicina um novo produto  ---->
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ProdutoDTO createProduct(@PathVariable Long restauranteId,
@@ -54,7 +54,7 @@ public class ProdutoController {
 		return produtoModel.toProdutoDTO(produtoService.addProduct(product)) ;
 	}
 
-	//---- Atualiza um produto  ---->
+
 	@PutMapping("/{productId}")
 	public ProdutoDTO upDateProduct(
 			@PathVariable Long restauranteId, @PathVariable Long productId,

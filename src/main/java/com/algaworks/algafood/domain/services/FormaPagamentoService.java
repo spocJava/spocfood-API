@@ -1,21 +1,17 @@
 package com.algaworks.algafood.domain.services;
 
 import com.algaworks.algafood.api.input_model.FormaPagamentoInputModel;
-import com.algaworks.algafood.api.input_model_to_domain.FormaPagamentoInputModelToDomainModel;
+import com.algaworks.algafood.api.input_model.input_model_to_domain.FormaPagamentoInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.FormaPagamento;
 import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.FormaPagamentoInUseException;
 import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.FormaPagamentoNotFoundException;
+import com.algaworks.algafood.domain.repositorys.FormaPagamentoRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.EntidadeEmUsoExeption;
-import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.EntidadeNaoEncontradaExecption;
-import com.algaworks.algafood.domain.repositorys.FormaPagamentoRepository;
 
 import java.util.List;
 

@@ -1,12 +1,11 @@
 package com.algaworks.algafood.domain.repositorys;
 
-import java.util.List;
-
+import com.algaworks.algafood.domain.entitys.Cozinha;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.algaworks.algafood.domain.entitys.Cozinha;
+import java.util.List;
 
 @Repository
 public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {

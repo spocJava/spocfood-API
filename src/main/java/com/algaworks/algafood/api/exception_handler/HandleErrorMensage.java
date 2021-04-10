@@ -1,13 +1,12 @@
 package com.algaworks.algafood.api.exception_handler;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Classe para montar a resposta contendo as informações pertinentes ao erro

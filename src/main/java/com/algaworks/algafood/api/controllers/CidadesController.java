@@ -1,30 +1,20 @@
 package com.algaworks.algafood.api.controllers;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.algaworks.algafood.api.DTO.CidadeDTO;
-import com.algaworks.algafood.api.domain_to_DTO.CidadeModel;
+import com.algaworks.algafood.api.DTO.domain_to_DTO.CidadeModel;
 import com.algaworks.algafood.api.input_model.CidadeInputModel;
-import com.algaworks.algafood.api.input_model_to_domain.CidadeInputModelToDomainModel;
+import com.algaworks.algafood.api.input_model.input_model_to_domain.CidadeInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.Cidade;
 import com.algaworks.algafood.domain.exeptions.NegocioException;
 import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.repositorys.CidadeRepository;
 import com.algaworks.algafood.domain.services.CadastroCidadeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/cidades")

@@ -1,21 +1,14 @@
 package com.algaworks.algafood.domain.services;
 
-import com.algaworks.algafood.api.input_model_to_domain.PedidoInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.*;
-import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.PedidoEmUsoException;
 import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.PedidoNaoEncontradaException;
 import com.algaworks.algafood.domain.repositorys.PedidoRepository;
-import com.algaworks.algafood.domain.repositorys.filter.PedidoFilter;
-import com.algaworks.algafood.infrastructure.specs.PedidoSpecs;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -28,10 +21,6 @@ public class PedidoService {
     private final UsuarioService usuarioService;
     private final ProdutoService produtoService;
 
-
-    public List<Pedido> listar(PedidoFilter filter){
-        return pedidoRepository.findAll(new PedidoSpecs().pedidoFilter(filter));
-    }
 
     public Pedido getPedido(String codigo){
         return pedidoRepository.findByCodigo(codigo).orElseThrow(() -> new PedidoNaoEncontradaException(codigo));

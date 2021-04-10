@@ -1,8 +1,7 @@
 package com.algaworks.algafood.domain.repositorys;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.algaworks.algafood.domain.entitys.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 

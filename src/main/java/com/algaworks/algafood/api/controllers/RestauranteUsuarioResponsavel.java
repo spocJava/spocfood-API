@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controllers;
 
 import com.algaworks.algafood.api.DTO.UsuarioDTO;
-import com.algaworks.algafood.api.domain_to_DTO.UsuarioModel;
+import com.algaworks.algafood.api.DTO.domain_to_DTO.UsuarioModel;
 import com.algaworks.algafood.domain.entitys.Restaurante;
 import com.algaworks.algafood.domain.services.CadastroRestauranteService;
 import lombok.AllArgsConstructor;

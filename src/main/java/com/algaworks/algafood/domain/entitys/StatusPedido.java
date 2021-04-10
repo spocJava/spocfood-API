@@ -3,6 +3,10 @@ package com.algaworks.algafood.domain.entitys;
 import java.util.Arrays;
 import java.util.List;
 
+/***
+ * @author Elizeu De Freitas Miranda (spocJava)
+ */
+
 public enum StatusPedido {
 
 	CRIADO (),             //-- Status default
@@ -31,7 +35,7 @@ public enum StatusPedido {
 	 * - percisa está para que possa comprir as regras de mudança de status se no novo status não conter
 	 * - o status anterior correto que é comparado com o status atual da instância do pedido o status não é mududo
 	 *     EXEMPLO:
-	 *     TODO--> public Boolean notMoveToNextStatus(StatusPedido.CONFIRMADO){
+	 *     public Boolean notMoveToNextStatus(StatusPedido.CONFIRMADO){
 	 *      		return !CONFIRMADO.statusPedidosAnterior(CRIADO).contains(estânciaDePedido.CANCELADO);
 	 *      }
 	 * - como vc pode ver o statusPedidoAterior não contém o mesmo status da instância do pedido onde se que mudar

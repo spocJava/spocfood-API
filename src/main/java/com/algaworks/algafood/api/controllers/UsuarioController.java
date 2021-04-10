@@ -1,23 +1,19 @@
 package com.algaworks.algafood.api.controllers;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.algaworks.algafood.api.DTO.UsuarioDTO;
-import com.algaworks.algafood.api.domain_to_DTO.UsuarioModel;
+import com.algaworks.algafood.api.DTO.domain_to_DTO.UsuarioModel;
 import com.algaworks.algafood.api.input_model.SenhaUsuarioInputModel;
 import com.algaworks.algafood.api.input_model.UsuarioInputModel;
 import com.algaworks.algafood.api.input_model.UsuarioInputModelUpDate;
-import com.algaworks.algafood.api.input_model_to_domain.UsuarioInputModelToDomainModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import com.algaworks.algafood.api.input_model.input_model_to_domain.UsuarioInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.Usuario;
 import com.algaworks.algafood.domain.services.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")

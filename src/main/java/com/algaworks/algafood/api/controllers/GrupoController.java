@@ -1,13 +1,11 @@
 package com.algaworks.algafood.api.controllers;
 
 import com.algaworks.algafood.api.DTO.GrupoDTO;
-import com.algaworks.algafood.api.domain_to_DTO.GrupoModel;
+import com.algaworks.algafood.api.DTO.domain_to_DTO.GrupoModel;
 import com.algaworks.algafood.api.input_model.GrupoInputModel;
-import com.algaworks.algafood.api.input_model_to_domain.GrupoInputModelToDomainModel;
+import com.algaworks.algafood.api.input_model.input_model_to_domain.GrupoInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.Grupo;
-import com.algaworks.algafood.domain.entitys.Permicao;
 import com.algaworks.algafood.domain.services.GrupoService;
-import com.algaworks.algafood.domain.services.PermicaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +23,6 @@ public class GrupoController {
 	private GrupoModel grupoModel;
 	@Autowired
 	private GrupoInputModelToDomainModel inputModelToDomainModel;
-	@Autowired
-	private PermicaoService permicaoService;
-
 
 	
 	//--- Listar todos os grupos --->

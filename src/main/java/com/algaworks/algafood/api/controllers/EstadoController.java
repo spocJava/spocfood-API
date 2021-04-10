@@ -1,28 +1,18 @@
 package com.algaworks.algafood.api.controllers;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.algaworks.algafood.api.DTO.EstadoDTO;
-import com.algaworks.algafood.api.domain_to_DTO.EstadoModel;
+import com.algaworks.algafood.api.DTO.domain_to_DTO.EstadoModel;
 import com.algaworks.algafood.api.input_model.EstadoInputModel;
-import com.algaworks.algafood.api.input_model_to_domain.EstadoInputModelToDomainModel;
+import com.algaworks.algafood.api.input_model.input_model_to_domain.EstadoInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.Estado;
 import com.algaworks.algafood.domain.repositorys.EstadoRepository;
 import com.algaworks.algafood.domain.services.CadastroEstadoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/estados")

@@ -1,9 +1,9 @@
 package com.algaworks.algafood.api.controllers;
 
 import com.algaworks.algafood.api.DTO.CozinhaDTO;
-import com.algaworks.algafood.api.domain_to_DTO.CozinhaModel;
+import com.algaworks.algafood.api.DTO.domain_to_DTO.CozinhaModel;
 import com.algaworks.algafood.api.input_model.CozinhaImputModel;
-import com.algaworks.algafood.api.input_model_to_domain.CozinhaInputModelToDomainModel;
+import com.algaworks.algafood.api.input_model.input_model_to_domain.CozinhaInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.Cozinha;
 import com.algaworks.algafood.domain.repositorys.CozinhaRepository;
 import com.algaworks.algafood.domain.services.CadrastroCozinhaService;

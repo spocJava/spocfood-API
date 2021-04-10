@@ -1,18 +1,16 @@
 package com.algaworks.algafood.domain.entitys;
 
+import com.algaworks.algafood.domain.exeptions.NegocioException;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import javax.persistence.*;
-
-import com.algaworks.algafood.domain.exeptions.NegocioException;
-import org.hibernate.annotations.CreationTimestamp;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)

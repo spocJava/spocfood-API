@@ -1,6 +1,5 @@
 package com.algaworks.algafood.api.input_model;
 
-import com.algaworks.algafood.api.DTO.CidadeResumoDTO;
 import lombok.Getter;
 import lombok.Setter;
 

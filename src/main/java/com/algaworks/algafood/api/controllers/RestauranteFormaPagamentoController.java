@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controllers;
 
 import com.algaworks.algafood.api.DTO.FormaPagamentoDTO;
-import com.algaworks.algafood.api.domain_to_DTO.FormaPagamentoModel;
+import com.algaworks.algafood.api.DTO.domain_to_DTO.FormaPagamentoModel;
 import com.algaworks.algafood.domain.entitys.Restaurante;
 import com.algaworks.algafood.domain.services.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;

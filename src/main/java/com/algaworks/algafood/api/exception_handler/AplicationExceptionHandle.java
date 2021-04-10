@@ -1,9 +1,12 @@
 package com.algaworks.algafood.api.exception_handler;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.algaworks.algafood.domain.exeptions.NegocioException;
+import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.EntidadeEmUsoExeption;
+import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.EntidadeNaoEncontradaExecption;
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
+import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +26,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.algaworks.algafood.domain.exeptions.NegocioException;
-import com.algaworks.algafood.domain.exeptions.entity_in_used_exception.EntidadeEmUsoExeption;
-import com.algaworks.algafood.domain.exeptions.entity_not_found_exception.EntidadeNaoEncontradaExecption;
-import com.fasterxml.jackson.databind.JsonMappingException.Reference;
-import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Classe responsável por capturar todas as exceptions da aplicação para
@@ -63,11 +62,11 @@ public class AplicationExceptionHandle extends ResponseEntityExceptionHandler{
 		List<HandleErrorMensage.Field> problemFields = bindingResult.getFieldErrors().stream()
 				.map(fieldError -> {
 					String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
-			     return HandleErrorMensage.Field.builder() //            1ª - transforma uma list de fieldErro em uma list de objetos problemFields
-						.name(fieldError.getField()) //                  2ª - pega o nome do campo
-						.userMessage(message) //                         3ª - pega a mensagem do erro
-						.build();//                                      4ª - cria o(s) objeto Field
-	             })//                                                    5ª - coleta os objetos e forma uma list de Fields passada para problemFields
+			     return HandleErrorMensage.Field.builder() //
+						.name(fieldError.getField()) //
+						.userMessage(message) //
+						.build();//
+	             })//
 				.collect(Collectors.toList());
 
 		HandleErrorMensage problem = createHandleErrorMensage(status, type, detail)

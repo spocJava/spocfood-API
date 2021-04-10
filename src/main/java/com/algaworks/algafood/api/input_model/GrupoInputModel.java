@@ -1,6 +1,5 @@
 package com.algaworks.algafood.api.input_model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,7 +1,6 @@
 package com.algaworks.algafood.domain.services;
 
 import com.algaworks.algafood.api.input_model.UsuarioInputModelUpDate;
-import com.algaworks.algafood.api.input_model_to_domain.UsuarioInputModelToDomainModel;
 import com.algaworks.algafood.domain.entitys.Grupo;
 import com.algaworks.algafood.domain.entitys.Usuario;
 import com.algaworks.algafood.domain.exeptions.NegocioException;
@@ -23,7 +22,6 @@ import java.util.Optional;
 public class UsuarioService {
 
 	private final UsuarioRepository usuarioRepository;
-	private final UsuarioInputModelToDomainModel inputModelToDomainModel;
 	private final GrupoService grupoService;
 
 	

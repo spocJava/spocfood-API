@@ -1,14 +1,11 @@
 package com.algaworks.algafood.api.DTO;
 
-import com.algaworks.algafood.domain.entitys.*;
+import com.algaworks.algafood.domain.entitys.StatusPedido;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
