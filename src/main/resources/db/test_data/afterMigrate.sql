@@ -90,8 +90,8 @@ insert into permicao (descricao, nome) values ("Permição de acesso entregador"
 
 insert into grupo_permicoes (grupo_id, permicoes_id) values (1, 1), (2, 4), (3, 3), (5, 2), (5, 5);
 
-insert into usuario (data_cadrastro, email, nome, senha) values (utc_timestamp, "elizeu2020@gmail.com", "Elizeu De Freitas Miranda", "123456" );
-insert into usuario (data_cadrastro, email, nome, senha) values (utc_timestamp, "marluce2020@gmail.com", "Marluce De Sousa Brito", "123456" );
+insert into usuario (data_cadrastro, email, nome, senha) values (utc_timestamp, "elizeuebay@gmail.com", "Elizeu De Freitas Miranda", "123456" );
+insert into usuario (data_cadrastro, email, nome, senha) values (utc_timestamp, "elizeuebay+marluce@gmail.com", "Marluce De Sousa Brito", "123456" );
 insert into usuario (data_cadrastro, email, nome, senha) values (utc_timestamp, "elizama2020@gmail.com", "Elizama De Freitas Miranda", "123456" );
 insert into usuario (data_cadrastro, email, nome, senha) values (utc_timestamp, "aninha2020@gmail.com", "Ana Paula De Freitas Miranda", "123456" );
 insert into usuario (data_cadrastro, email, nome, senha) values (utc_timestamp, "maria2020@gmail.com", "Maria De Freitas Miranda", "123456" );
@@ -105,16 +105,16 @@ insert into item_pedido (id, observacao, preco_total, preco_unitario, quantidade
 
 insert into pedido (id, codigo, data_criacao, end_bairro, end_cep, end_complemento, end_logradouro, end_numero, sub_total,taxa_frete, valor_total,
 usuario_cliente_id, endereco_cidade_id, forma_pagamento_id, restaurante_id, status)
-values (2, '7f4ea6bf-f011-4dc4-a5c2-2f8a69c3pa10', utc_timestamp, 'Brasil', '38443-050', 'Apto 803', 'Rua Jacinto Freitas', '278', 298.90, 10, 308.90, 1, 1, 1, 1, 'CRIADO');
+values (2, '7f4ea6bf-f011-4dc4-a5c2-2f8a69c3pa10', utc_timestamp, 'Brasil', '38443-050', 'Apto 803', 'Rua Jacinto Freitas', '278', 298.90, 10, 308.90, 2, 1, 1, 1, 'CRIADO');
 insert into item_pedido (id, observacao, preco_total, preco_unitario, quantidade, pedido_id, produto_id) values (3, null, 29.90, 29.90, 1, 1, 3);
 
 insert into pedido (id, codigo, data_criacao, end_bairro, end_cep, end_complemento, end_logradouro, end_numero, sub_total,taxa_frete, valor_total,
 usuario_cliente_id, endereco_cidade_id, forma_pagamento_id, restaurante_id, status)
-values (3, '7f4ea6tf-f011-4dc4-a5c2-2f8a69c3as10', utc_timestamp, 'Brasil', '38470-000', 'Apto 568', 'Rua Das Nações', '600', 298.90, 10, 308.90, 1, 1, 1, 1, 'CRIADO');
+values (3, '7f4ea6tf-f011-4dc4-a5c2-2f8a69c3as10', utc_timestamp, 'Brasil', '38470-000', 'Apto 568', 'Rua Das Nações', '600', 298.90, 10, 308.90, 3, 1, 1, 1, 'CRIADO');
 insert into item_pedido (id, observacao, preco_total, preco_unitario, quantidade, pedido_id, produto_id) values (1, null, 78.9, 78.9, 1, 1, 5);
 
 insert into pedido (id, codigo, data_criacao, end_bairro, end_cep, end_complemento, end_logradouro, end_numero, sub_total,taxa_frete, valor_total,
 usuario_cliente_id, endereco_cidade_id, forma_pagamento_id, restaurante_id, status)
-values (4, '82b4cad6-039b-4fde-b0f6-5891050976cc', utc_timestamp, 'Centro', '38400-111', 'Casa 2', 'Rua Acre', '300', 79.00, 0, 79.00, 2, 1, 2, 2, 'CRIADO');
+values (4, '82b4cad6-039b-4fde-b0f6-5891050976cc', utc_timestamp, 'Centro', '38400-111', 'Casa 2', 'Rua Acre', '300', 79.00, 0, 79.00, 4, 1, 2, 2, 'CRIADO');
 insert into item_pedido (id, observacao, preco_total, preco_unitario, quantidade, pedido_id, produto_id) values (5, null, 78.9, 78.9, 1, 2, 1);
 insert into item_pedido (id, observacao, preco_total, preco_unitario, quantidade, pedido_id, produto_id) values (4, null, 29.90, 29.90, 1, 2, 2);

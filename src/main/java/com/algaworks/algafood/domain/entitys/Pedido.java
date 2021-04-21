@@ -1,9 +1,12 @@
 package com.algaworks.algafood.domain.entitys;
 
+import com.algaworks.algafood.core.events.PedidoCanceladoEvent;
+import com.algaworks.algafood.core.events.PedidoConfirmadoEvent;
 import com.algaworks.algafood.domain.exeptions.NegocioException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -15,7 +18,7 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Pedido {
+public class Pedido extends AbstractAggregateRoot<Pedido> {
 	
 	@Id
 	@EqualsAndHashCode.Include
@@ -58,32 +61,33 @@ public class Pedido {
 	@OneToMany(mappedBy = "pedido" , cascade = CascadeType.ALL)
 	private List<ItemPedido> items = new ArrayList<>();
 
-	//-- Gera o código uuid da instacia do pedido
 	@PrePersist //-- antes do jpa pesistir a entidide gera o codigo uuid
 	private void setUUID(){
 		setCodigo(UUID.randomUUID().toString());
 	}
 
 	public void calcularValorTotal(){
-		getItems().forEach(ItemPedido::calcValorTotal);//-- calcula o valor tatol de cada item de pedido
+		getItems().forEach(ItemPedido::calcValorTotal);
 		this.subTotal = getItems().stream()
-				.map(item -> item.getPrecoTotal()) //-- calcula o subtotal do pedido que é a soma de todos os items
+				.map(item -> item.getPrecoTotal())
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
-		this.valorTotal = this.subTotal.add(this.taxaFrete); //-- calculao valor total do pedido subtotal + taxaFrete
+		this.valorTotal = this.subTotal.add(this.taxaFrete);
 	}
 
-	public void setTaxaFrete(){  //-- set a taxa frete para esse pedido de acordo com o restaurante onde foi feito
+	public void setTaxaFrete(){
 		this.setTaxaFrete((BigDecimal.valueOf(getRestaurante().getTaxaFrete())));
 	}
 
-	public void addItemsPedidos(){
-		getItems().forEach(item -> item.setPedido(this)); //-- add items pedidos ao pedido
+	public void addItemsPedidos() {
+		getItems().forEach(item -> item.setPedido(this));
 	}
 
 	//-- Muda para o status confirmado
 	public void changeToConfirmed(){
 		this.setStatus(StatusPedido.CONFIRMADO);
 		this.setDataConfirmacao(OffsetDateTime.now());
+
+		registerEvent(new PedidoConfirmadoEvent(this));
 	}
 
 	//-- Muda para o status entregue
@@ -96,6 +100,8 @@ public class Pedido {
 	public void changeToCanceled(){
 		this.setStatus(StatusPedido.CANCELADO);
 		this.setDataCancelamento(OffsetDateTime.now());
+
+		registerEvent(new PedidoCanceladoEvent(this));
 	}
 
 	//-- Verifica se pode mudar ou não de status

@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.controllers;
 
-import com.algaworks.algafood.domain.services.ChangeStatusOrderService;
+import com.algaworks.algafood.domain.services.FluxoPedidoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/pedidos/{codigo}")
 @AllArgsConstructor
-public class MudarStatusPedidoController {
+public class FluxoPedidoController {
 
-    private final ChangeStatusOrderService changePedido;
+    private final FluxoPedidoService changePedido;
 
     @PutMapping("/confirmacao")
     @ResponseStatus(HttpStatus.NO_CONTENT)
