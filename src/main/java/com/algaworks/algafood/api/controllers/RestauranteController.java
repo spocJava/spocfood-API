@@ -80,42 +80,42 @@ public class RestauranteController {
 
 	
 	@PutMapping("/{restauranteId}/ativar")
-	@ResponseStatus(HttpStatus.NO_CONTENT)  
+	@ResponseStatus(value = HttpStatus.OK, reason = "Restaurante ativado com sucesso")
 	public void ativar(@PathVariable Long restauranteId) {
 		restauranteService.ativar(restauranteId);
 	}
 
 	
 	@DeleteMapping("/{restauranteId}/ativar")
-	@ResponseStatus(HttpStatus.NO_CONTENT)  
+	@ResponseStatus(value = HttpStatus.OK, reason = "Restaurante inativado com sucesso")
 	public void inativar(@PathVariable Long restauranteId) {
 		restauranteService.inativar(restauranteId);
 	}
 
 
 	@PutMapping("/ativacao-multipla")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(value = HttpStatus.OK, reason = "Restaurantes ativados com sucesso")
 	public void ativarMultiplosRest(@RequestBody List<Long> restauranteId){
 		restauranteService.ativarGrupoRest(restauranteId);
 	}
 
 	
 	@DeleteMapping("/ativacao-multipla")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(value = HttpStatus.OK, reason = "Restaurantes inativados com sucesso")
 	public void inativarMultiplosRest(@RequestBody List<Long> restauranteId){
 		restauranteService.inativarGrupoRest(restauranteId);
 	}
 
 	
 	@PutMapping("/{restauranteId}/abertura")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(value = HttpStatus.OK, reason = "Restaurante aberto com sucesso")
 	public void abrirRestaurante(@PathVariable  Long restauranteId){
 		restauranteService.abrirRestaurante(restauranteId);
 	}
 
 	
 	@PutMapping("/{restauranteId}/fechamento")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(value = HttpStatus.OK, reason = "Restaurante foi fechado com sucesso")
 	public void fecharRestaurante(@PathVariable Long restauranteId){
 		restauranteService.fecharRestaurante(restauranteId);
 	}
